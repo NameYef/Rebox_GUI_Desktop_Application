@@ -24,7 +24,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(997, 734)
+        MainWindow.resize(1028, 804)
         MainWindow.setMinimumSize(QSize(300, 0))
         MainWindow.setStyleSheet(u"background-color: rgb(222, 221, 218);")
         self.centralwidget = QWidget(MainWindow)
@@ -81,22 +81,6 @@ class Ui_MainWindow(object):
         self.widget_3.setObjectName(u"widget_3")
         self.gridLayout_2 = QGridLayout(self.widget_3)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.toggle = QPushButton(self.widget_3)
-        self.toggle.setObjectName(u"toggle")
-        self.toggle.setStyleSheet(u"background-color: rgb(94, 92, 100);")
-        self.toggle.setCheckable(True)
-
-        self.horizontalLayout.addWidget(self.toggle)
-
-        self.horizontalSpacer = QSpacerItem(448, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout.addItem(self.horizontalSpacer)
-
-
-        self.gridLayout_2.addLayout(self.horizontalLayout, 0, 0, 1, 1)
-
         self.stackedWidget = QStackedWidget(self.widget_3)
         self.stackedWidget.setObjectName(u"stackedWidget")
         self.stackedWidget.setMinimumSize(QSize(300, 0))
@@ -152,10 +136,10 @@ class Ui_MainWindow(object):
         self.stackedWidget.addWidget(self.home_page)
         self.configs_page = QWidget()
         self.configs_page.setObjectName(u"configs_page")
-        self.verticalLayout_14 = QVBoxLayout(self.configs_page)
-        self.verticalLayout_14.setObjectName(u"verticalLayout_14")
+        self.verticalLayout_11 = QVBoxLayout(self.configs_page)
+        self.verticalLayout_11.setObjectName(u"verticalLayout_11")
         self.horizontalLayout_3 = QHBoxLayout()
-        self.horizontalLayout_3.setSpacing(30)
+        self.horizontalLayout_3.setSpacing(20)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.config_list = QWidget(self.configs_page)
         self.config_list.setObjectName(u"config_list")
@@ -472,12 +456,14 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_3.addWidget(self.config_list)
 
-        self.verticalLayout_12 = QVBoxLayout()
-        self.verticalLayout_12.setObjectName(u"verticalLayout_12")
+        self.verticalLayout_10 = QVBoxLayout()
+        self.verticalLayout_10.setSpacing(30)
+        self.verticalLayout_10.setObjectName(u"verticalLayout_10")
         self.project_widget = QWidget(self.configs_page)
         self.project_widget.setObjectName(u"project_widget")
-        self.project_widget.setMaximumSize(QSize(500, 16777215))
+        self.project_widget.setMaximumSize(QSize(10000, 600))
         self.verticalLayout_3 = QVBoxLayout(self.project_widget)
+        self.verticalLayout_3.setSpacing(6)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.label_6 = QLabel(self.project_widget)
         self.label_6.setObjectName(u"label_6")
@@ -488,50 +474,90 @@ class Ui_MainWindow(object):
 
         self.project_listwidget = QListWidget(self.project_widget)
         self.project_listwidget.setObjectName(u"project_listwidget")
+        self.project_listwidget.setMaximumSize(QSize(600, 16777215))
         self.project_listwidget.setStyleSheet(u"color: rgb(0, 0, 0);")
 
         self.verticalLayout_3.addWidget(self.project_listwidget)
 
 
-        self.verticalLayout_12.addWidget(self.project_widget)
+        self.verticalLayout_10.addWidget(self.project_widget)
 
-        self.project_widget_2 = QWidget(self.configs_page)
-        self.project_widget_2.setObjectName(u"project_widget_2")
-        self.project_widget_2.setMaximumSize(QSize(500, 16777215))
-        self.verticalLayout_11 = QVBoxLayout(self.project_widget_2)
-        self.verticalLayout_11.setObjectName(u"verticalLayout_11")
-        self.label_8 = QLabel(self.project_widget_2)
-        self.label_8.setObjectName(u"label_8")
-        self.label_8.setFont(font1)
-        self.label_8.setStyleSheet(u"color: rgb(0, 0, 0);")
+        self.label_7 = QLabel(self.configs_page)
+        self.label_7.setObjectName(u"label_7")
+        self.label_7.setFont(font1)
+        self.label_7.setStyleSheet(u"color: rgb(0, 0, 0);")
 
-        self.verticalLayout_11.addWidget(self.label_8)
+        self.verticalLayout_10.addWidget(self.label_7)
 
-        self.boxed_img_folder = QListWidget(self.project_widget_2)
-        self.boxed_img_folder.setObjectName(u"boxed_img_folder")
-        self.boxed_img_folder.setStyleSheet(u"color: rgb(0, 0, 0);")
+        self.current_config = QTextEdit(self.configs_page)
+        self.current_config.setObjectName(u"current_config")
+        self.current_config.setMaximumSize(QSize(300, 500))
+        self.current_config.setStyleSheet(u"color: rgb(0, 0, 0);")
 
-        self.verticalLayout_11.addWidget(self.boxed_img_folder)
+        self.verticalLayout_10.addWidget(self.current_config)
+
+        self.formLayout_9 = QFormLayout()
+        self.formLayout_9.setObjectName(u"formLayout_9")
+        self.video_name_Label = QLabel(self.configs_page)
+        self.video_name_Label.setObjectName(u"video_name_Label")
+        self.video_name_Label.setStyleSheet(u"color: rgb(0, 0, 0);")
+
+        self.formLayout_9.setWidget(0, QFormLayout.LabelRole, self.video_name_Label)
+
+        self.video_name_LineEdit = QLineEdit(self.configs_page)
+        self.video_name_LineEdit.setObjectName(u"video_name_LineEdit")
+        self.video_name_LineEdit.setMaximumSize(QSize(300, 16777215))
+        self.video_name_LineEdit.setStyleSheet(u"color: rgb(0, 0, 0);")
+
+        self.formLayout_9.setWidget(0, QFormLayout.FieldRole, self.video_name_LineEdit)
 
 
-        self.verticalLayout_12.addWidget(self.project_widget_2)
+        self.verticalLayout_10.addLayout(self.formLayout_9)
 
 
-        self.horizontalLayout_3.addLayout(self.verticalLayout_12)
+        self.horizontalLayout_3.addLayout(self.verticalLayout_10)
 
 
-        self.verticalLayout_14.addLayout(self.horizontalLayout_3)
+        self.verticalLayout_11.addLayout(self.horizontalLayout_3)
 
         self.save_button = QPushButton(self.configs_page)
         self.save_button.setObjectName(u"save_button")
         self.save_button.setMinimumSize(QSize(0, 30))
         self.save_button.setStyleSheet(u"background-color: rgb(94, 92, 100);")
 
-        self.verticalLayout_14.addWidget(self.save_button)
+        self.verticalLayout_11.addWidget(self.save_button)
 
         self.stackedWidget.addWidget(self.configs_page)
 
         self.gridLayout_2.addWidget(self.stackedWidget, 1, 0, 1, 1)
+
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.toggle = QPushButton(self.widget_3)
+        self.toggle.setObjectName(u"toggle")
+        self.toggle.setStyleSheet(u"background-color: rgb(94, 92, 100);")
+        self.toggle.setCheckable(True)
+
+        self.horizontalLayout.addWidget(self.toggle)
+
+        self.horizontalSpacer = QSpacerItem(448, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer)
+
+        self.elapsed_timer = QLabel(self.widget_3)
+        self.elapsed_timer.setObjectName(u"elapsed_timer")
+        self.elapsed_timer.setMinimumSize(QSize(300, 0))
+        font2 = QFont()
+        font2.setPointSize(13)
+        font2.setBold(True)
+        font2.setItalic(False)
+        self.elapsed_timer.setFont(font2)
+        self.elapsed_timer.setStyleSheet(u"color: rgb(0, 0, 0);")
+
+        self.horizontalLayout.addWidget(self.elapsed_timer)
+
+
+        self.gridLayout_2.addLayout(self.horizontalLayout, 0, 0, 1, 1)
 
 
         self.gridLayout.addWidget(self.widget_3, 0, 2, 1, 1)
@@ -611,7 +637,6 @@ class Ui_MainWindow(object):
         self.script_1.setText(QCoreApplication.translate("MainWindow", u"S", None))
         self.config_1.setText(QCoreApplication.translate("MainWindow", u"C", None))
         self.exit_1.setText(QCoreApplication.translate("MainWindow", u"E", None))
-        self.toggle.setText(QCoreApplication.translate("MainWindow", u"Toggle", None))
         self.run_script.setText(QCoreApplication.translate("MainWindow", u"Run Script", None))
         self.stop_script.setText(QCoreApplication.translate("MainWindow", u"Force Stop", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"[WIP]", None))
@@ -635,8 +660,11 @@ class Ui_MainWindow(object):
         self.min_match_label.setText(QCoreApplication.translate("MainWindow", u"min_matches", None))
         self.max_size_label.setText(QCoreApplication.translate("MainWindow", u"max_size_acceptable", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Project Folder", None))
-        self.label_8.setText(QCoreApplication.translate("MainWindow", u"Boxed_Img Folder", None))
+        self.label_7.setText(QCoreApplication.translate("MainWindow", u"Current configs", None))
+        self.video_name_Label.setText(QCoreApplication.translate("MainWindow", u"video_name", None))
         self.save_button.setText(QCoreApplication.translate("MainWindow", u"Save", None))
+        self.toggle.setText(QCoreApplication.translate("MainWindow", u"Toggle", None))
+        self.elapsed_timer.setText(QCoreApplication.translate("MainWindow", u"Elapsed Time: 0s", None))
         self.home_2.setText(QCoreApplication.translate("MainWindow", u"Home", None))
         self.script_2.setText(QCoreApplication.translate("MainWindow", u"Script", None))
         self.config_2.setText(QCoreApplication.translate("MainWindow", u"Configs", None))

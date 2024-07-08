@@ -2,7 +2,8 @@ import sys
 import os
 import natsort
 import requests
-from PySide6.QtCore import QProcess, QIODevice, QUrl, QEventLoop
+import time
+from PySide6.QtCore import QProcess, QIODevice, QUrl, QEventLoop, QTimer
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest
 from PySide6 import QtGui
@@ -33,6 +34,7 @@ class MainWindow(QMainWindow):
         self.ui.stop_script.clicked.connect(self.stop_script)
 
         self.ui.console_log.setReadOnly(True)
+        self.ui.current_config.setReadOnly(True)
         # self.process = QProcess(self)
         # self.process.setProcessChannelMode(QProcess.MergedChannels)
         # self.process.readyReadStandardOutput.connect(self.read_output)
@@ -55,7 +57,7 @@ class MainWindow(QMainWindow):
         self.ui.ratio_lineEdit.setPlaceholderText("default: 0.5")
         self.ui.min_match_lineEdit.setPlaceholderText("default: 15")
         self.ui.max_size_lineEdit.setPlaceholderText("default: 1.3")
-
+        self.ui.video_name_LineEdit.setPlaceholderText("Enter boxed video name")
         self.process = None
         self.manager = QNetworkAccessManager(self)
         #    Indexes         config_list
@@ -75,18 +77,32 @@ class MainWindow(QMainWindow):
         #       13         "min_matches":"",
         #       14         "max_size_acceptable":"",
         #       15         "project_folder":""
-        #       16         "boxed_folder_name":"",
-        #       17         "video_name":"",
-        #       18         "":""
+        #       16         "video_name":"",
+        #       17         "":""
         #                }
         
         self.projects_directory = "./projects"
-        self.config_list = [1920,1080,10,3,3000,100000,500,300,800,500,30,25,0.5,15,1.3, ""]    # default config list values
+        self.config_name = ["resolution_x","resolution_y","video_fps","no_photo_match","nfeature_obj","nfeature_detect_zone","x_offset_for_detection","y_offset_for_detection"
+                            ,"width_offset","height_offset","min_x_offset_same_cls","min_y_offset_same_cls","ratio_threshold","min_matches","max_size_acceptable","project_folder","video_name"]
+        self.config_list = [1920,1080,10,3,3000,100000,500,300,800,500,30,25,0.5,15,1.3, "", ""]    # default config list values
+        self.config_type = ["int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "float", "float","float","int","float","str","str"]
+        
+        self.program_running = False
+        self.second = 0
+        self.program_elapsed_timer = QTimer(self)
+        self.program_elapsed_timer.setInterval(1000)
+        self.program_elapsed_timer.timeout.connect(self.elapsed_time)
+        
+        try: 
+            requests.put(self.url+"store-config", json=self.config_list)
+        except requests.exceptions.ConnectionError:
+            print("OFFLINE MODE")
         with open("config.txt", "w") as f:
             for i in self.config_list:
                 f.write(f"{i}\n")
         
-        self.populate_directory_list(self.projects_directory)
+        self.populate_directory_list()
+        self.enter_cur_config()
 
     def switch_to_home_page(self):
         self.ui.stackedWidget.setCurrentIndex(1)
@@ -97,17 +113,25 @@ class MainWindow(QMainWindow):
     def switch_to_configs_page(self):
         self.ui.stackedWidget.setCurrentIndex(2)
 
+    def elapsed_time(self):
+        if self.program_running:
+            self.second += 1
+            self.ui.elapsed_timer.setText(f"Elapsed Time: {self.second}s")
     def run_script(self):
         # self.ui.console_log.clear()
         # self.ui.run_script.setEnabled(False)
         # self.ui.stop_script.setEnabled(True)
         # self.process.start("python", ["script.py"])
+
         self.ui.console_log.clear()
         self.ui.run_script.setEnabled(False)
         self.ui.stop_script.setEnabled(True)
 
         url = QUrl(self.url+"run-script")
         request = QNetworkRequest(url)
+        
+        self.program_running = True
+        self.program_elapsed_timer.start()
         self.reply = self.manager.get(request)
         self.reply.readyRead.connect(self.read_output)
         self.reply.finished.connect(self.script_finished)
@@ -122,18 +146,31 @@ class MainWindow(QMainWindow):
             self.reply.abort()
             self.ui.console_log.append("\nScript forcefully stopped.\n")
             self.script_finished()
+            self.program_elapsed_timer.stop()
+            self.program_running = False
+            self.second = 0
+            
     def read_output(self):
         # output = self.process.readAllStandardOutput().data().decode()
         # self.ui.console_log.moveCursor(QtGui.QTextCursor.End)
         # self.ui.console_log.insertPlainText(output)
+        
+        # self.now_elapsed_time = time.time()
+        # second = round(self.now_elapsed_time-self.program_elapsed_time) % 3600 
+        # self.ui.elapsed_timer.setText(f"Elapsed Time: {second}s")
+        
         while self.reply.canReadLine():
             output = self.reply.readLine().data().decode().strip()
             self.ui.console_log.moveCursor(QtGui.QTextCursor.End)
             self.ui.console_log.insertPlainText(output + '\n')
-
+        
+  
     def script_finished(self):
         self.ui.run_script.setEnabled(True)
         self.ui.stop_script.setEnabled(False)
+        self.program_elapsed_timer.stop()
+        self.program_running = False
+        self.second = 0
 
     def check_numeric(x):
         if not isinstance(x, (int, float, complex)):
@@ -146,17 +183,39 @@ class MainWindow(QMainWindow):
             # Show the message box
             msg_box.exec()
 
-    def populate_directory_list(self, dir):
+    def populate_directory_list(self):
         # Clear the list widget
         self.ui.project_listwidget.clear()
 
         # Get the list of directories inside the base directory
-        directories = requests.get(self.url+"listdir").json()
-        # directories = natsort.os_sorted([os.path.join(dir,d) for d in os.listdir(dir) if os.path.isdir(os.path.join(dir, d))])
+        try:
+            directories = requests.get(self.url+"listdir").json()
+            # directories = natsort.os_sorted([os.path.join(dir,d) for d in os.listdir(dir) if os.path.isdir(os.path.join(dir, d))])
 
-        # Add directories to the list widget
-        self.ui.project_listwidget.addItems(directories)
+            # Add directories to the list widget
+            self.ui.project_listwidget.addItems(directories)
+        except requests.exceptions.ConnectionError:
+            print("OFFLINE MODE")
+            self.ui.project_listwidget.addItems(["OFFLINE"])
 
+    def enter_cur_config(self):
+        self.ui.current_config.clear()
+        with open("config.txt","r") as f:
+            data = f.readlines()
+            for i in range(len(data)):
+                self.ui.current_config.moveCursor(QtGui.QTextCursor.End)
+                self.ui.current_config.insertPlainText(f"{self.config_name[i]}: {data[i]}")
+
+    def show_error_msg(self, config):
+            msg_box = QMessageBox()
+            msg_box.setText(f'Invalid Input: {config}')
+            msg_box.setWindowTitle('Invalid')
+            
+            # Set stylesheet for message box buttons
+            msg_box.setStyleSheet('QPushButton { color: black; }')
+            # Show the message box
+            msg_box.exec()
+            return
     def save_config(self):
         entries = []
         entries.append(self.ui.res_x_lineEdit.text()) 
@@ -178,25 +237,31 @@ class MainWindow(QMainWindow):
             entries.append(self.ui.project_listwidget.selectedItems()[0].text())
         else:
             entries.append("")
+        entries.append(self.ui.video_name_LineEdit.text())
+        print(entries)
+        
 
-        for i in entries[:-1]:
-            try:
-                if i == "":
-                    continue
-                float(i)
-
-            except ValueError:
-                msg_box = QMessageBox()
-                msg_box.setText('Invalid Input: Input numbers!')
-                msg_box.setWindowTitle('Invalid')
-                
-                # Set stylesheet for message box buttons
-                msg_box.setStyleSheet('QPushButton { color: black; }')
-                # Show the message box
-                msg_box.exec()
-                return
+        for i in range(len(entries) - 2):
             
-        if entries[15] == "":
+            if entries[i] == "":
+                continue
+            
+            if self.config_type[i] == "int":
+                try:
+                    int(entries[i])
+                except ValueError:
+                    self.show_error_msg(self.config_name[i])
+                    return
+            
+            elif self.config_type[i] == "float":
+                try:
+                    float(entries[i])
+                except ValueError:
+                    self.show_error_msg(self.config_name[i])
+                    return
+            
+            
+        if entries[15] == "":       # index 15 is project_folder
                 msg_box = QMessageBox()
                 msg_box.setText('Choose a project folder!')
                 msg_box.setWindowTitle('Invalid')
@@ -208,15 +273,24 @@ class MainWindow(QMainWindow):
                 return
         
         with open("config.txt", "w") as f:
-            for i in range(len((entries))):
+            for i in range(15):
                 if entries[i] == "":
                     f.write(f"{self.config_list[i]}\n")
                 else:
                     f.write(f"{entries[i]}\n")
+            for i in range(15, len(entries)):
+                f.write(f"{entries[i]}\n")
+        
+        with open("config.txt","r") as f:
+            final = [i.replace("\n","") for i in f.readlines()]
 
+        # print(final)
+        requests.put(self.url+"store-config", json=final)
+        self.enter_cur_config()
         msg_box = QMessageBox()
         msg_box.setText('Data has been saved successfully!')
         msg_box.setWindowTitle('Saved')
+        
         
         # Set stylesheet for message box buttons
         msg_box.setStyleSheet('QPushButton { color: black; }')

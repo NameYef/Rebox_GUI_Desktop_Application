@@ -2,6 +2,7 @@
 # from concurrent import futures
 # import cv2
 # import os
+# import sys
 # import shutil
 # import numpy as np
 # import matplotlib.pyplot as plt
@@ -10,7 +11,7 @@
 # import functools
 # from plot_labels import plot_label
 # from image_to_video import to_video
-
+# from tidy_imglbl import cleanup
 
 
 # # for parsing single file
@@ -44,7 +45,7 @@
 #             roi = image[top_left_y:top_left_y+height,top_left_x:top_left_x+width]
 #     else: # for the 2nd photo
 #         top_left_x = top_left_x - config.x_offset_for_detection if ((top_left_x - config.x_offset_for_detection) >= 0) else 0
-#         top_left_y = top_left_y - config.y_offset_for_detection if ((top_left_y - 300) >= 0) else 0
+#         top_left_y = top_left_y - config.y_offset_for_detection if ((top_left_y - config.y_offset_for_detection) >= 0) else 0
 #         width = width + config.width_offset if top_left_x+width+config.width_offset <= resolution_x else resolution_x-top_left_x
 #         height = height + config.height_offset if top_left_y+height+config.height_offset <= resolution_y else resolution_y-top_left_y
 #         # print(top_left_x, top_left_y, width, height)
@@ -69,6 +70,7 @@
 #             good_matches.append(m) # [m] when want to see the photos by plt 
 #     if len(good_matches) < min_matches:
 #         print("Object not found in this photo")
+#         sys.stdout.flush() 
 #         return None 
 #     return good_matches
 
@@ -105,8 +107,9 @@
 #         centery = miny + h / 2
 
 #         # IMPLEMENT REJECT OVERSIZED COORDS --------------------
-#         if (w / resolution_x > 1.3 * width) or (h /resolution_y > 1.3 * height): # FILLER CHECK
+#         if (w / resolution_x > config.max_size_acceptable * width) or (h /resolution_y > config.max_size_acceptable * height): # FILLER CHECK
 #             print("TOO BIG")
+#             sys.stdout.flush() 
 #             return None
 #         # print(centerx, centery, w, h)
 #         return ((centerx+x) / resolution_x, (centery+y) / resolution_y, w / resolution_x, h / resolution_y)
@@ -140,22 +143,26 @@
 #                             bigger = True
 #                             data[line_index] = f"{class_type} {coords[0]} {coords[1]} {coords[2]} {coords[3]}\n"
 #                             print(data[line_index])
+#                             sys.stdout.flush() 
 #                         else:
 #                             can_append = False
 #                     else:
 #                         print(f"boxed already, photo {file}")
+#                         sys.stdout.flush() 
 #                         return 
 
 #     if bigger:
 #         with open(file, "w") as f:
 #             f.writelines(data)
 #             print(f"bigger is found and is not original label, photo {file}")
+#             sys.stdout.flush() 
 #     else:
 #         if can_append:
 #             data.append(f"{class_type} {coords[0]} {coords[1]} {coords[2]} {coords[3]}\n")
 #             with open(file, "w") as f:
 #                 f.writelines(data)
 #                 print(f"appending class {class_type} to {file}")
+#                 sys.stdout.flush() 
 
 
 # def match_and_store(obj, first, second, label_path):
@@ -175,41 +182,84 @@
 
 
 # def match_and_store_multiprocessing(partial_func, objects):
-#     with multiprocessing.Pool(4) as pool:
+#     with multiprocessing.Pool(3) as pool:
 #             pool.map(partial_func, objects)
 
 
 # def copy_directory_with_sequence(source_dir, base_dest_dir):
 #     counter = 1
 #     while True:
-#         destination_dir = os.path.join(base_dest_dir,f"rebox{counter}")
+#         destination_dir = os.path.join(base_dest_dir,f"{source_dir.split('/')[-2]}_{counter}")
 #         if not os.path.exists(destination_dir):
 #             try:
 #                 shutil.copytree(source_dir, destination_dir)
 #                 print(f"Successfully copied from {source_dir} to {destination_dir}")
+#                 sys.stdout.flush() 
 #                 break
 #             except OSError as e:
 #                 print(f"Error: {source_dir} not copied. {e}")
+#                 sys.stdout.flush() 
 #                 break
 #         counter += 1
+#     if "classes.txt" in os.listdir(destination_dir):
+#         os.remove(os.path.join(destination_dir,"classes.txt"))
 #     return destination_dir
 
 
 # if __name__ == "__main__":
-#     dir_path = os.path.dirname(os.path.realpath(__file__))
-#     dest_dir = copy_directory_with_sequence(f"{os.path.join(os.getcwd(),config.label_folder)}",dir_path)
+#     print("STARTING")
+#     sys.stdout.flush() 
 
-#     images = natsort.os_sorted(os.listdir(config.img_folder)) # need to sort to ensure the oldest image get treated first
+#     with open("home/rebox/config.txt", "r") as f:
+#     data = [i.replace("\n","") for i in f.readlines()]
+#     resolution_x = int(data[0])
+#     resolution_y = int(data[1])
+#     video_fps = int(data[2])
+#     no_photo_match = int(data[3])
+#     nfeature_obj = int(data[4])
+#     nfeature_detect_zone = int(data[5])
+#     x_offset_for_detection = float(data[6])
+#     y_offset_for_detection = float(data[7])
+#     width_offset = float(data[8])
+#     height_offset = float(data[9])
+#     min_x_offset_same_cls = float(data[10])    
+#     min_y_offset_same_cls = float(data[11])
+#     ratio_threshold = float(data[12])
+#     min_matches = int(data[13])
+#     max_size_acceptable = float(data[14])
+#     project_folder = data[15]
+#     video_name = data[16] 
     
-#     resolution_x = cv2.imread(os.path.join(config.img_folder,images[0])).shape[1]
-#     resolution_y = cv2.imread(os.path.join(config.img_folder,images[0])).shape[0]
+    
+#     # initialize img and lbl folders
+#     img_folder = os.path.join(config.project_folder,"images")
+#     label_folder = os.path.join(config.project_folder,"labels")
 
-#     for i in range(4): # no need to iterate to the last image
+#     # move the images away from the img_folder if there is no corresponding txt in the label_folder
+#     cleanup(config.project_folder)
+
+#     # make a copy of the label folder and do the relabelling there
+#     dir_path = os.path.join(os.path.dirname(os.path.realpath(__file__)),"relabelled")
+#     # print(dir_path)
+#     dest_dir = copy_directory_with_sequence(f"{os.path.join(os.getcwd(),label_folder)}",dir_path)
+#     print(dest_dir)
+#     sys.stdout.flush() 
+#     images = natsort.os_sorted(os.listdir(img_folder)) # need to sort to ensure the oldest image get treated first
+#     print(len(images))
+#     sys.stdout.flush() 
+
+#     # get the resolution of the images of the project folder
+#     resolution_x = cv2.imread(os.path.join(img_folder,images[0])).shape[1]
+#     resolution_y = cv2.imread(os.path.join(img_folder,images[0])).shape[0]
+
+
+#     # algorithm in action
+#     for i in range(len(images)-1): # no need to iterate to the last image
 #         image_read = []
 #         # label_detect = []
 #         func_list = []
 
-#         image1_path = os.path.join(config.img_folder, images[i])
+#         image1_path = os.path.join(img_folder, images[i])
 #         label1_path = os.path.join(dest_dir,images[i].replace(images[i][-3:],"txt"))
 #         image1 = cv2.imread(image1_path)
 #         image1_detection = parse_detection(label1_path)
@@ -217,7 +267,7 @@
 #         for j in range(1,config.no_photo_match+1):
 #             try:
 #                 image_read.append(images[i+j])
-#                 image_path = os.path.join(config.img_folder, images[i+j])
+#                 image_path = os.path.join(img_folder, images[i+j])
 #                 label_path = os.path.join(dest_dir,images[i+j].replace(images[i][-3:],"txt"))
 
 #                 image = cv2.imread(image_path)
@@ -230,6 +280,7 @@
 
 #         for image in image_read:
 #             print(image)
+#             sys.stdout.flush() 
 
 #         processes = []
 #         for func in func_list:
@@ -242,8 +293,9 @@
 
     
 #     # box image
-#     plot_label(dest_dir)
+#     boxed_path = plot_label(dest_dir)
 
 #     # make video
-#     to_video(fps=30)
+#     to_video(boxed_path, "cool_video", config.video_fps)
 
+#     # print("HI")
