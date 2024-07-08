@@ -24,7 +24,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(968, 709)
+        MainWindow.resize(997, 734)
         MainWindow.setMinimumSize(QSize(300, 0))
         MainWindow.setStyleSheet(u"background-color: rgb(222, 221, 218);")
         self.centralwidget = QWidget(MainWindow)
@@ -206,6 +206,23 @@ class Ui_MainWindow(object):
 
 
         self.verticalLayout_6.addLayout(self.formLayout_2)
+
+        self.formLayout_18 = QFormLayout()
+        self.formLayout_18.setObjectName(u"formLayout_18")
+        self.video_fps_label = QLabel(self.config_list)
+        self.video_fps_label.setObjectName(u"video_fps_label")
+        self.video_fps_label.setStyleSheet(u"color: rgb(0, 0, 0);")
+
+        self.formLayout_18.setWidget(0, QFormLayout.LabelRole, self.video_fps_label)
+
+        self.video_fps_lineEdit = QLineEdit(self.config_list)
+        self.video_fps_lineEdit.setObjectName(u"video_fps_lineEdit")
+        self.video_fps_lineEdit.setStyleSheet(u"color: rgb(0, 0, 0);")
+
+        self.formLayout_18.setWidget(0, QFormLayout.FieldRole, self.video_fps_lineEdit)
+
+
+        self.verticalLayout_6.addLayout(self.formLayout_18)
 
 
         self.verticalLayout_13.addLayout(self.verticalLayout_6)
@@ -507,6 +524,7 @@ class Ui_MainWindow(object):
 
         self.save_button = QPushButton(self.configs_page)
         self.save_button.setObjectName(u"save_button")
+        self.save_button.setMinimumSize(QSize(0, 30))
         self.save_button.setStyleSheet(u"background-color: rgb(94, 92, 100);")
 
         self.verticalLayout_14.addWidget(self.save_button)
@@ -600,6 +618,7 @@ class Ui_MainWindow(object):
         self.label.setText(QCoreApplication.translate("MainWindow", u"Resolutions", None))
         self.res_x_label.setText(QCoreApplication.translate("MainWindow", u"resolution_x", None))
         self.res_y_label.setText(QCoreApplication.translate("MainWindow", u"resolution_y", None))
+        self.video_fps_label.setText(QCoreApplication.translate("MainWindow", u"video_fps", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Effectiveness", None))
         self.no_photo_match_label.setText(QCoreApplication.translate("MainWindow", u"no_photo_match", None))
         self.nfeature_obj_label.setText(QCoreApplication.translate("MainWindow", u"nfeature_obj", None))
@@ -616,7 +635,7 @@ class Ui_MainWindow(object):
         self.min_match_label.setText(QCoreApplication.translate("MainWindow", u"min_matches", None))
         self.max_size_label.setText(QCoreApplication.translate("MainWindow", u"max_size_acceptable", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Project Folder", None))
-        self.label_8.setText(QCoreApplication.translate("MainWindow", u"Where to store boxed images?", None))
+        self.label_8.setText(QCoreApplication.translate("MainWindow", u"Boxed_Img Folder", None))
         self.save_button.setText(QCoreApplication.translate("MainWindow", u"Save", None))
         self.home_2.setText(QCoreApplication.translate("MainWindow", u"Home", None))
         self.script_2.setText(QCoreApplication.translate("MainWindow", u"Script", None))
