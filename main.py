@@ -4,10 +4,42 @@ import natsort
 import requests
 import time
 from PySide6.QtCore import QProcess, QIODevice, QUrl, QEventLoop, QTimer
-from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
+from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QDialog
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest
 from PySide6 import QtGui
 from sidebar import Ui_MainWindow
+from img_dialog import Ui_Dialog
+
+class Dialogo(Ui_Dialog, QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.par = parent
+        
+        self.setupUi(self)
+        self.ok.clicked.connect(self.accept)
+        self.cancel.clicked.connect(self.reject)
+        self.img_folder_listWidget.clear()
+
+        # Get the list of directories inside the base directory
+        try:
+            directories = requests.get(self.par.url+"listdir/boxed").json()
+            # directories = natsort.os_sorted([os.path.join(dir,d) for d in os.listdir(dir) if os.path.isdir(os.path.join(dir, d))])
+
+            # Add directories to the list widget
+            self.img_folder_listWidget.addItems(directories)
+        except requests.exceptions.ConnectionError:
+            print("OFFLINE MODE")
+            self.img_folder_listWidget.addItems(["OFFLINE"])
+
+    def accept(self):
+        if self.img_folder_listWidget.selectedItems():
+            self.par.image_dir = self.img_folder_listWidget.selectedItems()[0].text()
+            self.par.image_list = requests.get(self.par.url+f"listdir/boxed/{self.par.image_dir}").json()
+            
+            self.par.image_index = 0
+            self.par.load_image()
+            
+            
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -16,6 +48,8 @@ class MainWindow(QMainWindow):
         self.url = "http://dev.alphaaitech.com:40030/"
 
         self.ui = Ui_MainWindow()
+        self.dialog_ui = Ui_Dialog()
+        self.dialog_ui.setupUi(self)
         self.ui.setupUi(self)
         self.setWindowTitle("Rebox")
 
@@ -30,8 +64,21 @@ class MainWindow(QMainWindow):
         self.ui.config_1.clicked.connect(self.switch_to_configs_page)
         self.ui.config_2.clicked.connect(self.switch_to_configs_page)
 
+        self.ui.images_1.clicked.connect(self.switch_to_images_page)
+        self.ui.images_2.clicked.connect(self.switch_to_images_page)
+
+        self.ui.videos_1.clicked.connect(self.switch_to_videos_page)
+        self.ui.videos_2.clicked.connect(self.switch_to_videos_page)
+
+        self.ui.refresh_button.clicked.connect(self.refresh)
+
         self.ui.run_script.clicked.connect(self.run_script)
         self.ui.stop_script.clicked.connect(self.stop_script)
+
+        self.ui.next_img.clicked.connect(self.next_img)
+        self.ui.prev_img.clicked.connect(self.prev_img)
+        self.ui.browse_img.clicked.connect(self.browse_img)
+        self.ui.delete_img.clicked.connect(self.delete_img)
 
         self.ui.console_log.setReadOnly(True)
         self.ui.current_config.setReadOnly(True)
@@ -93,6 +140,22 @@ class MainWindow(QMainWindow):
         self.program_elapsed_timer.setInterval(1000)
         self.program_elapsed_timer.timeout.connect(self.elapsed_time)
         
+        self.check_server_status()
+        self.server_status_timer = QTimer(self)
+        self.server_status_timer.setInterval(10000)
+        self.server_status_timer.timeout.connect(self.check_server_status)
+        self.server_status_timer.start()
+
+        self.image_dir = ""
+        self.image_list = []
+        self.image_index = 0
+        # self.test_image = os.path.join("./images",self.image_dir[self.img_index])
+        # self.ui.image_box.setScaledContents(True)
+        # pixmap = QtGui.QPixmap(self.test_image)
+        # self.ui.image_box.setPixmap(pixmap)
+        # self.setCentralWidget(self.ui.image_box)
+
+        
         try: 
             requests.put(self.url+"store-config", json=self.config_list)
         except requests.exceptions.ConnectionError:
@@ -104,6 +167,19 @@ class MainWindow(QMainWindow):
         self.populate_directory_list()
         self.enter_cur_config()
 
+    def check_server_status(self):
+        try:
+            requests.get(self.url + "/check")
+            self.ui.server_status.setStyleSheet(u"color: rgb(0, 204, 0);")
+            self.ui.server_status.setText("Server: Connected")
+        except requests.exceptions.ConnectionError:
+            self.ui.server_status.setStyleSheet(u"color: rgb(204, 0, 0);")
+            self.ui.server_status.setText("Server: Disconnected")
+
+    def refresh(self):
+        self.check_server_status()
+        self.populate_directory_list()
+
     def switch_to_home_page(self):
         self.ui.stackedWidget.setCurrentIndex(1)
     
@@ -111,12 +187,22 @@ class MainWindow(QMainWindow):
         self.ui.stackedWidget.setCurrentIndex(0)
     
     def switch_to_configs_page(self):
+        self.ui.stackedWidget.setCurrentIndex(4)
+    
+    def switch_to_images_page(self):
         self.ui.stackedWidget.setCurrentIndex(2)
+
+    def switch_to_videos_page(self):
+        self.ui.stackedWidget.setCurrentIndex(3)
 
     def elapsed_time(self):
         if self.program_running:
             self.second += 1
-            self.ui.elapsed_timer.setText(f"Elapsed Time: {self.second}s")
+            second = "{0:02d}".format(self.second%60)
+            minute = "{0:02d}".format(self.second//60%60)
+            hour = "{0:02d}".format(self.second//3600)
+            self.ui.elapsed_timer.setText(f"Elapsed Time: {hour}:{minute}:{second}")
+
     def run_script(self):
         # self.ui.console_log.clear()
         # self.ui.run_script.setEnabled(False)
@@ -164,7 +250,6 @@ class MainWindow(QMainWindow):
             self.ui.console_log.moveCursor(QtGui.QTextCursor.End)
             self.ui.console_log.insertPlainText(output + '\n')
         
-  
     def script_finished(self):
         self.ui.run_script.setEnabled(True)
         self.ui.stop_script.setEnabled(False)
@@ -189,7 +274,7 @@ class MainWindow(QMainWindow):
 
         # Get the list of directories inside the base directory
         try:
-            directories = requests.get(self.url+"listdir").json()
+            directories = requests.get(self.url+"listdir/projects").json()
             # directories = natsort.os_sorted([os.path.join(dir,d) for d in os.listdir(dir) if os.path.isdir(os.path.join(dir, d))])
 
             # Add directories to the list widget
@@ -216,6 +301,7 @@ class MainWindow(QMainWindow):
             # Show the message box
             msg_box.exec()
             return
+    
     def save_config(self):
         entries = []
         entries.append(self.ui.res_x_lineEdit.text()) 
@@ -272,6 +358,18 @@ class MainWindow(QMainWindow):
                 msg_box.exec()
                 return
         
+        if entries[16] == "":      # index 16 is video_name
+            counter = 1
+            try:
+                video_dir = requests.get(self.url+"listdir/videos").json()
+                while True:
+                    if f"{entries[15]}_video{counter}.mp4" in video_dir:
+                        counter += 1
+                    break
+                entries[16] = f"{entries[15]}_video{counter}"
+            except requests.exceptions.ConnectionError:
+                pass
+        
         with open("config.txt", "w") as f:
             for i in range(15):
                 if entries[i] == "":
@@ -297,6 +395,42 @@ class MainWindow(QMainWindow):
         
         # Show the message box
         msg_box.exec()
+
+    def load_image(self):
+        response = requests.get(self.url+f"get-image/boxed/{self.image_dir}/{self.image_list[self.image_index]}")
+
+        if response.status_code == 200:
+            image = QtGui.QPixmap()
+            image.loadFromData(response.content)
+
+            self.ui.image_box.setPixmap(image)
+  
+            self.ui.image_view_status.setText(f"{self.image_index+1}/{len(self.image_list)}    {self.image_dir}/{self.image_list[self.image_index]}")
+        else:
+            self.ui.image_box.setText("Failed to retrieve image")
+
+    def next_img(self):
+        if self.image_index + 1 < len(self.image_list):
+            self.image_index +=1
+            self.load_image()
+            self.ui.image_view_status.setText(f"{self.image_index+1}/{len(self.image_list)}    {self.image_dir}/{self.image_list[self.image_index]}")
+        
+    def prev_img(self):
+        if self.image_index - 1 >= 0:
+            self.image_index -= 1
+            self.load_image()
+            self.ui.image_view_status.setText(f"{self.image_index+1}/{len(self.image_list)}    {self.image_dir}/{self.image_list[self.image_index]}")
+
+    def browse_img(self):
+        # dialog = QDialog(self)
+        # dialog.setWindowTitle("Choose an image folder")
+        # dialog.resize(500,400)
+        dialog = Dialogo(self)
+        dialog.setWindowTitle("Choose an image folder")
+        dialog.exec()
+        
+    def delete_img(self):
+        pass
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

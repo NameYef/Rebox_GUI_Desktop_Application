@@ -20,6 +20,8 @@ from PySide6.QtWidgets import (QApplication, QFormLayout, QGridLayout, QHBoxLayo
     QMainWindow, QPushButton, QSizePolicy, QSpacerItem,
     QStackedWidget, QTextEdit, QVBoxLayout, QWidget)
 
+from custom_widget import ScaledLabel
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
@@ -63,6 +65,20 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_2.addWidget(self.config_1)
 
+        self.images_1 = QPushButton(self.icon_only_widget)
+        self.images_1.setObjectName(u"images_1")
+        self.images_1.setCheckable(True)
+        self.images_1.setAutoExclusive(True)
+
+        self.verticalLayout_2.addWidget(self.images_1)
+
+        self.videos_1 = QPushButton(self.icon_only_widget)
+        self.videos_1.setObjectName(u"videos_1")
+        self.videos_1.setCheckable(True)
+        self.videos_1.setAutoExclusive(True)
+
+        self.verticalLayout_2.addWidget(self.videos_1)
+
         self.verticalSpacer = QSpacerItem(18, 448, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_2.addItem(self.verticalSpacer)
@@ -81,6 +97,50 @@ class Ui_MainWindow(object):
         self.widget_3.setObjectName(u"widget_3")
         self.gridLayout_2 = QGridLayout(self.widget_3)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.toggle = QPushButton(self.widget_3)
+        self.toggle.setObjectName(u"toggle")
+        self.toggle.setStyleSheet(u"background-color: rgb(94, 92, 100);")
+        self.toggle.setCheckable(True)
+
+        self.horizontalLayout.addWidget(self.toggle)
+
+        self.refresh_button = QPushButton(self.widget_3)
+        self.refresh_button.setObjectName(u"refresh_button")
+        self.refresh_button.setStyleSheet(u"background-color: rgb(94, 92, 100);")
+
+        self.horizontalLayout.addWidget(self.refresh_button)
+
+        self.horizontalSpacer = QSpacerItem(448, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer)
+
+        self.server_status = QLabel(self.widget_3)
+        self.server_status.setObjectName(u"server_status")
+        font = QFont()
+        font.setPointSize(13)
+        font.setBold(True)
+        self.server_status.setFont(font)
+        self.server_status.setStyleSheet(u"color: rgb(204, 0, 0);")
+
+        self.horizontalLayout.addWidget(self.server_status)
+
+        self.elapsed_timer = QLabel(self.widget_3)
+        self.elapsed_timer.setObjectName(u"elapsed_timer")
+        self.elapsed_timer.setMinimumSize(QSize(190, 0))
+        font1 = QFont()
+        font1.setPointSize(13)
+        font1.setBold(True)
+        font1.setItalic(False)
+        self.elapsed_timer.setFont(font1)
+        self.elapsed_timer.setStyleSheet(u"color: rgb(0, 0, 0);")
+
+        self.horizontalLayout.addWidget(self.elapsed_timer)
+
+
+        self.gridLayout_2.addLayout(self.horizontalLayout, 0, 0, 1, 1)
+
         self.stackedWidget = QStackedWidget(self.widget_3)
         self.stackedWidget.setObjectName(u"stackedWidget")
         self.stackedWidget.setMinimumSize(QSize(300, 0))
@@ -126,20 +186,108 @@ class Ui_MainWindow(object):
         self.stackedWidget.addWidget(self.script_page)
         self.home_page = QWidget()
         self.home_page.setObjectName(u"home_page")
-        self.label_2 = QLabel(self.home_page)
-        self.label_2.setObjectName(u"label_2")
-        self.label_2.setGeometry(QRect(170, 170, 301, 211))
-        font = QFont()
-        font.setPointSize(36)
-        self.label_2.setFont(font)
-        self.label_2.setStyleSheet(u"color: rgb(0, 0, 0);")
+        self.horizontalLayout_6 = QHBoxLayout(self.home_page)
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.textEdit = QTextEdit(self.home_page)
+        self.textEdit.setObjectName(u"textEdit")
+        self.textEdit.setStyleSheet(u"color: rgb(0, 0, 0);")
+
+        self.horizontalLayout_6.addWidget(self.textEdit)
+
         self.stackedWidget.addWidget(self.home_page)
+        self.images_page = QWidget()
+        self.images_page.setObjectName(u"images_page")
+        self.verticalLayout_14 = QVBoxLayout(self.images_page)
+        self.verticalLayout_14.setObjectName(u"verticalLayout_14")
+        self.verticalLayout_12 = QVBoxLayout()
+        self.verticalLayout_12.setObjectName(u"verticalLayout_12")
+        self.upper_image_page = QWidget(self.images_page)
+        self.upper_image_page.setObjectName(u"upper_image_page")
+        self.upper_image_page.setMinimumSize(QSize(0, 50))
+        self.upper_image_page.setMaximumSize(QSize(16777215, 50))
+        self.horizontalLayout_4 = QHBoxLayout(self.upper_image_page)
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.browse_img = QPushButton(self.upper_image_page)
+        self.browse_img.setObjectName(u"browse_img")
+        self.browse_img.setMinimumSize(QSize(0, 30))
+        self.browse_img.setStyleSheet(u"background-color: rgb(94, 92, 100);")
+
+        self.horizontalLayout_4.addWidget(self.browse_img)
+
+        self.horizontalSpacer_2 = QSpacerItem(138, 17, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_4.addItem(self.horizontalSpacer_2)
+
+        self.image_view_status = QLabel(self.upper_image_page)
+        self.image_view_status.setObjectName(u"image_view_status")
+        self.image_view_status.setMinimumSize(QSize(100, 0))
+        self.image_view_status.setMaximumSize(QSize(500, 16777215))
+        self.image_view_status.setStyleSheet(u"color: rgb(0, 0, 0);")
+        self.image_view_status.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.horizontalLayout_4.addWidget(self.image_view_status)
+
+        self.horizontalSpacer_3 = QSpacerItem(108, 17, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_4.addItem(self.horizontalSpacer_3)
+
+        self.delete_img = QPushButton(self.upper_image_page)
+        self.delete_img.setObjectName(u"delete_img")
+        self.delete_img.setMinimumSize(QSize(0, 30))
+        self.delete_img.setStyleSheet(u"background-color: rgb(94, 92, 100);")
+
+        self.horizontalLayout_4.addWidget(self.delete_img)
+
+
+        self.verticalLayout_12.addWidget(self.upper_image_page)
+
+        self.image_box = ScaledLabel(self.images_page)
+        self.image_box.setObjectName(u"image_box")
+        self.image_box.setMaximumSize(QSize(1920, 1080))
+        self.image_box.setStyleSheet(u"color: rgb(0, 0, 0);")
+
+        self.verticalLayout_12.addWidget(self.image_box)
+
+        self.lower_image_page = QWidget(self.images_page)
+        self.lower_image_page.setObjectName(u"lower_image_page")
+        self.lower_image_page.setMinimumSize(QSize(0, 70))
+        self.lower_image_page.setMaximumSize(QSize(16777215, 70))
+        self.horizontalLayout_5 = QHBoxLayout(self.lower_image_page)
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.prev_img = QPushButton(self.lower_image_page)
+        self.prev_img.setObjectName(u"prev_img")
+        self.prev_img.setMinimumSize(QSize(0, 30))
+        self.prev_img.setStyleSheet(u"background-color: rgb(94, 92, 100);")
+
+        self.horizontalLayout_5.addWidget(self.prev_img)
+
+        self.next_img = QPushButton(self.lower_image_page)
+        self.next_img.setObjectName(u"next_img")
+        self.next_img.setMinimumSize(QSize(0, 30))
+        self.next_img.setStyleSheet(u"background-color: rgb(94, 92, 100);")
+
+        self.horizontalLayout_5.addWidget(self.next_img)
+
+
+        self.verticalLayout_12.addWidget(self.lower_image_page)
+
+
+        self.verticalLayout_14.addLayout(self.verticalLayout_12)
+
+        self.stackedWidget.addWidget(self.images_page)
+        self.videos_page = QWidget()
+        self.videos_page.setObjectName(u"videos_page")
+        self.label_9 = QLabel(self.videos_page)
+        self.label_9.setObjectName(u"label_9")
+        self.label_9.setGeometry(QRect(210, 220, 381, 201))
+        self.label_9.setStyleSheet(u"color: rgb(0, 0, 0);")
+        self.stackedWidget.addWidget(self.videos_page)
         self.configs_page = QWidget()
         self.configs_page.setObjectName(u"configs_page")
         self.verticalLayout_11 = QVBoxLayout(self.configs_page)
         self.verticalLayout_11.setObjectName(u"verticalLayout_11")
         self.horizontalLayout_3 = QHBoxLayout()
-        self.horizontalLayout_3.setSpacing(20)
+        self.horizontalLayout_3.setSpacing(70)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.config_list = QWidget(self.configs_page)
         self.config_list.setObjectName(u"config_list")
@@ -150,9 +298,9 @@ class Ui_MainWindow(object):
         self.verticalLayout_6.setObjectName(u"verticalLayout_6")
         self.label = QLabel(self.config_list)
         self.label.setObjectName(u"label")
-        font1 = QFont()
-        font1.setPointSize(20)
-        self.label.setFont(font1)
+        font2 = QFont()
+        font2.setPointSize(20)
+        self.label.setFont(font2)
         self.label.setStyleSheet(u"color: rgb(0, 0, 0);")
 
         self.verticalLayout_6.addWidget(self.label)
@@ -215,7 +363,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.label_4 = QLabel(self.config_list)
         self.label_4.setObjectName(u"label_4")
-        self.label_4.setFont(font1)
+        self.label_4.setFont(font2)
         self.label_4.setStyleSheet(u"color: rgb(0, 0, 0);")
 
         self.verticalLayout_8.addWidget(self.label_4)
@@ -278,7 +426,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
         self.label_3 = QLabel(self.config_list)
         self.label_3.setObjectName(u"label_3")
-        self.label_3.setFont(font1)
+        self.label_3.setFont(font2)
         self.label_3.setStyleSheet(u"color: rgb(0, 0, 0);")
 
         self.verticalLayout_7.addWidget(self.label_3)
@@ -394,7 +542,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_9.setObjectName(u"verticalLayout_9")
         self.label_5 = QLabel(self.config_list)
         self.label_5.setObjectName(u"label_5")
-        self.label_5.setFont(font1)
+        self.label_5.setFont(font2)
         self.label_5.setStyleSheet(u"color: rgb(0, 0, 0);")
 
         self.verticalLayout_9.addWidget(self.label_5)
@@ -467,7 +615,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.label_6 = QLabel(self.project_widget)
         self.label_6.setObjectName(u"label_6")
-        self.label_6.setFont(font1)
+        self.label_6.setFont(font2)
         self.label_6.setStyleSheet(u"color: rgb(0, 0, 0);")
 
         self.verticalLayout_3.addWidget(self.label_6)
@@ -484,7 +632,7 @@ class Ui_MainWindow(object):
 
         self.label_7 = QLabel(self.configs_page)
         self.label_7.setObjectName(u"label_7")
-        self.label_7.setFont(font1)
+        self.label_7.setFont(font2)
         self.label_7.setStyleSheet(u"color: rgb(0, 0, 0);")
 
         self.verticalLayout_10.addWidget(self.label_7)
@@ -531,34 +679,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self.stackedWidget, 1, 0, 1, 1)
 
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.toggle = QPushButton(self.widget_3)
-        self.toggle.setObjectName(u"toggle")
-        self.toggle.setStyleSheet(u"background-color: rgb(94, 92, 100);")
-        self.toggle.setCheckable(True)
-
-        self.horizontalLayout.addWidget(self.toggle)
-
-        self.horizontalSpacer = QSpacerItem(448, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout.addItem(self.horizontalSpacer)
-
-        self.elapsed_timer = QLabel(self.widget_3)
-        self.elapsed_timer.setObjectName(u"elapsed_timer")
-        self.elapsed_timer.setMinimumSize(QSize(300, 0))
-        font2 = QFont()
-        font2.setPointSize(13)
-        font2.setBold(True)
-        font2.setItalic(False)
-        self.elapsed_timer.setFont(font2)
-        self.elapsed_timer.setStyleSheet(u"color: rgb(0, 0, 0);")
-
-        self.horizontalLayout.addWidget(self.elapsed_timer)
-
-
-        self.gridLayout_2.addLayout(self.horizontalLayout, 0, 0, 1, 1)
-
 
         self.gridLayout.addWidget(self.widget_3, 0, 2, 1, 1)
 
@@ -595,6 +715,20 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.config_2)
 
+        self.images_2 = QPushButton(self.icon_name_widget)
+        self.images_2.setObjectName(u"images_2")
+        self.images_2.setCheckable(True)
+        self.images_2.setAutoExclusive(True)
+
+        self.verticalLayout.addWidget(self.images_2)
+
+        self.videos_2 = QPushButton(self.icon_name_widget)
+        self.videos_2.setObjectName(u"videos_2")
+        self.videos_2.setCheckable(True)
+        self.videos_2.setAutoExclusive(True)
+
+        self.verticalLayout.addWidget(self.videos_2)
+
         self.verticalSpacer_2 = QSpacerItem(18, 448, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout.addItem(self.verticalSpacer_2)
@@ -624,6 +758,10 @@ class Ui_MainWindow(object):
         self.exit_2.toggled.connect(self.exit_1.setChecked)
         self.exit_2.pressed.connect(MainWindow.close)
         self.exit_1.pressed.connect(MainWindow.close)
+        self.images_1.toggled.connect(self.images_2.setChecked)
+        self.videos_1.toggled.connect(self.videos_2.setChecked)
+        self.images_2.toggled.connect(self.images_1.setChecked)
+        self.videos_2.toggled.connect(self.videos_1.setChecked)
 
         self.stackedWidget.setCurrentIndex(1)
 
@@ -636,10 +774,64 @@ class Ui_MainWindow(object):
         self.home_1.setText(QCoreApplication.translate("MainWindow", u"H", None))
         self.script_1.setText(QCoreApplication.translate("MainWindow", u"S", None))
         self.config_1.setText(QCoreApplication.translate("MainWindow", u"C", None))
+        self.images_1.setText(QCoreApplication.translate("MainWindow", u"I", None))
+        self.videos_1.setText(QCoreApplication.translate("MainWindow", u"V", None))
         self.exit_1.setText(QCoreApplication.translate("MainWindow", u"E", None))
+        self.toggle.setText(QCoreApplication.translate("MainWindow", u"Toggle", None))
+        self.refresh_button.setText(QCoreApplication.translate("MainWindow", u"Refresh", None))
+        self.server_status.setText(QCoreApplication.translate("MainWindow", u"Server: Disconnected", None))
+        self.elapsed_timer.setText(QCoreApplication.translate("MainWindow", u"Elapsed Time: 00:00:00", None))
         self.run_script.setText(QCoreApplication.translate("MainWindow", u"Run Script", None))
         self.stop_script.setText(QCoreApplication.translate("MainWindow", u"Force Stop", None))
-        self.label_2.setText(QCoreApplication.translate("MainWindow", u"[WIP]", None))
+        self.textEdit.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Ubuntu'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:26pt;\">WELCOME</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:26pt;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">#---------CONFIGURATION---------#<"
+                        "/p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"># how many photos matched from 1 photo</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">no_photo_match</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"># this is for the detection zone in the 2nd image, the 2 values determine how much away from the object is relevant for detection</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">x_offset_for_detection  # ?? unit away from obj top left x</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-inden"
+                        "t:0; text-indent:0px;\">y_offset_for_detection  # ?? unit away from obj top left y</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">width_offset # How wide the detect zone is</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">height_offset # How tall the detect zone is</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"># determine how close can boxes of same class be</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">min_x_offset_same_cls # ?? unit away from the closest box of same class</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; ma"
+                        "rgin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">min_y_offset_same_cls # ?? unit away from the closest box of same class</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"># for detection confidence and threshold</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">ratio_threshold # the higher, the more lenient the matching is</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">min_matches # higher values will allow boxes with lower confidence</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">max_size_acceptable # the maximum"
+                        " size that a new box can replace an existing box, i.e. x times larger than original,</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"># set higher if boxes diminish fast or object is sometimes big and sometimes small</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"># for matching computation, may need higher values only for ambiguous objects</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"># THIS PART BOTTLENECKS THE PROGRAM THE MOST, SETTING EITHER VALUE ABO"
+                        "VE 300000 WILL CRASH </p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">nfeature_obj</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">nfeature_detect_zone</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">#---------CONFIGURATION---------#</p>\n"
+"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
+        self.browse_img.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
+        self.image_view_status.setText(QCoreApplication.translate("MainWindow", u"Choose an image folder", None))
+        self.delete_img.setText(QCoreApplication.translate("MainWindow", u"Delete", None))
+        self.image_box.setText("")
+        self.prev_img.setText(QCoreApplication.translate("MainWindow", u"Previous Image", None))
+        self.next_img.setText(QCoreApplication.translate("MainWindow", u"Next Image", None))
+        self.label_9.setText(QCoreApplication.translate("MainWindow", u"VIDEOS PAGE", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Resolutions", None))
         self.res_x_label.setText(QCoreApplication.translate("MainWindow", u"resolution_x", None))
         self.res_y_label.setText(QCoreApplication.translate("MainWindow", u"resolution_y", None))
@@ -663,11 +855,11 @@ class Ui_MainWindow(object):
         self.label_7.setText(QCoreApplication.translate("MainWindow", u"Current configs", None))
         self.video_name_Label.setText(QCoreApplication.translate("MainWindow", u"video_name", None))
         self.save_button.setText(QCoreApplication.translate("MainWindow", u"Save", None))
-        self.toggle.setText(QCoreApplication.translate("MainWindow", u"Toggle", None))
-        self.elapsed_timer.setText(QCoreApplication.translate("MainWindow", u"Elapsed Time: 0s", None))
         self.home_2.setText(QCoreApplication.translate("MainWindow", u"Home", None))
         self.script_2.setText(QCoreApplication.translate("MainWindow", u"Script", None))
         self.config_2.setText(QCoreApplication.translate("MainWindow", u"Configs", None))
+        self.images_2.setText(QCoreApplication.translate("MainWindow", u"Images", None))
+        self.videos_2.setText(QCoreApplication.translate("MainWindow", u"Videos", None))
         self.exit_2.setText(QCoreApplication.translate("MainWindow", u"Exit", None))
     # retranslateUi
 
