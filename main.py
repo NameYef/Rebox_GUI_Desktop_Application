@@ -9,12 +9,14 @@ from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest
 from PySide6 import QtGui
 from sidebar import Ui_MainWindow
 from img_dialog import Ui_Dialog
+from name_dialog import Ui_NameDialog
 
+# ONLY FOR IMAGE VIEWER PAGE DIALOG
 class Dialogo(Ui_Dialog, QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.par = parent
-        
+        self.exit = False
         self.setupUi(self)
         self.ok.clicked.connect(self.accept)
         self.cancel.clicked.connect(self.reject)
@@ -39,8 +41,62 @@ class Dialogo(Ui_Dialog, QDialog):
             self.par.image_index = 0
             self.par.load_image()
             
-            
+class NameDialogo(Ui_NameDialog,QDialog):
+    def __init__(self, parent = None):
+        super().__init__(parent)
+        self.par = parent
+        self.setupUi(self)
+        self.ok.clicked.connect(self.accept)
+    def accept(self):
+        if self.profile_name.text() == "":
+            msg_box = QMessageBox()
+            msg_box.setText('Profile Name Cannot Be Empty')
+            msg_box.setWindowTitle('Invalid')
 
+            # Set stylesheet for message box buttons
+            msg_box.setStyleSheet('QPushButton { color: black; }')
+            # Show the message box
+            msg_box.exec()
+            return
+
+        # print(self.profile_name.text())
+        if f"{self.profile_name.text()}.txt" in os.listdir(self.par.path):
+            msg_box = QMessageBox()
+            msg_box.setText('Profile Name Already Taken')
+            msg_box.setWindowTitle('Invalid')
+
+            # Set stylesheet for message box buttons
+            msg_box.setStyleSheet('QPushButton { color: black; }')
+            # Show the message box
+            msg_box.exec()
+            return
+        
+        name = self.profile_name.text() + ".txt"
+        with open(os.path.join(self.par.path,name), "w") as f:
+            data=[]
+            data.append(self.par.ui.res_x_lineEdit.text()+"\n")
+            data.append(self.par.ui.res_y_lineEdit.text()+"\n")   
+            data.append(self.par.ui.video_fps_lineEdit.text()+"\n")   
+            data.append(self.par.ui.no_photo_match_lineEdit.text()+"\n")   
+            data.append(self.par.ui.nfeature_obj_lineEdit.text()+"\n")   
+            data.append(self.par.ui.nfeature_det_lineEdit.text()+"\n")   
+            data.append(self.par.ui.x_off_lineEdit.text()+"\n")   
+            data.append(self.par.ui.y_off_lineEdit.text()+"\n")   
+            data.append(self.par.ui.width_off_lineEdit.text()+"\n")   
+            data.append(self.par.ui.height_off_lineEdit.text()+"\n")   
+            data.append(self.par.ui.min_x_lineEdit.text()+"\n")   
+            data.append(self.par.ui.min_y_lineEdit.text()+"\n")   
+            data.append(self.par.ui.ratio_lineEdit.text()+"\n")   
+            data.append(self.par.ui.min_match_lineEdit.text()+"\n")   
+            data.append(self.par.ui.max_size_lineEdit.text()+"\n")
+            print(data)
+            f.writelines(data)
+        
+        self.close()
+        
+
+
+        
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -74,6 +130,10 @@ class MainWindow(QMainWindow):
 
         self.ui.run_script.clicked.connect(self.run_script)
         self.ui.stop_script.clicked.connect(self.stop_script)
+
+        self.ui.update_profile.clicked.connect(self.update_profile)
+        self.ui.save_new_profile.clicked.connect(self.save_profile)
+
 
         self.ui.next_img.clicked.connect(self.next_img)
         self.ui.prev_img.clicked.connect(self.prev_img)
@@ -145,7 +205,12 @@ class MainWindow(QMainWindow):
         self.server_status_timer.setInterval(10000)
         self.server_status_timer.timeout.connect(self.check_server_status)
         self.server_status_timer.start()
-
+        
+        self.path = os.path.dirname(os.path.realpath(__file__)) + "/configs"
+        self.selected_config = "base.txt"
+        self.ui.config_profile.addItems(natsort.os_sorted(os.listdir(self.path)))
+        self.ui.config_profile.itemSelectionChanged.connect(self.change_config)
+        # print(os.path.join(self.path,self.selected_config))
         self.image_dir = ""
         self.image_list = []
         self.image_index = 0
@@ -159,14 +224,16 @@ class MainWindow(QMainWindow):
         try: 
             requests.put(self.url+"store-config", json=self.config_list)
         except requests.exceptions.ConnectionError:
-            print("OFFLINE MODE")
-        with open("config.txt", "w") as f:
+            pass
+            # print("OFFLINE MODE")
+        with open(os.path.join(self.path, self.selected_config), "w") as f:
             for i in self.config_list:
                 f.write(f"{i}\n")
         
         self.populate_directory_list()
         self.enter_cur_config()
 
+# いつもある設定
     def check_server_status(self):
         try:
             requests.get(self.url + "/check")
@@ -203,6 +270,7 @@ class MainWindow(QMainWindow):
             hour = "{0:02d}".format(self.second//3600)
             self.ui.elapsed_timer.setText(f"Elapsed Time: {hour}:{minute}:{second}")
 
+# For Script page
     def run_script(self):
         # self.ui.console_log.clear()
         # self.ui.run_script.setEnabled(False)
@@ -257,6 +325,7 @@ class MainWindow(QMainWindow):
         self.program_running = False
         self.second = 0
 
+# For Config page
     def check_numeric(x):
         if not isinstance(x, (int, float, complex)):
             msg_box = QMessageBox()
@@ -280,12 +349,12 @@ class MainWindow(QMainWindow):
             # Add directories to the list widget
             self.ui.project_listwidget.addItems(directories)
         except requests.exceptions.ConnectionError:
-            print("OFFLINE MODE")
+            # print("OFFLINE MODE")
             self.ui.project_listwidget.addItems(["OFFLINE"])
 
     def enter_cur_config(self):
         self.ui.current_config.clear()
-        with open("config.txt","r") as f:
+        with open(os.path.join(self.path, self.selected_config),"r") as f:
             data = f.readlines()
             for i in range(len(data)):
                 self.ui.current_config.moveCursor(QtGui.QTextCursor.End)
@@ -302,6 +371,28 @@ class MainWindow(QMainWindow):
             msg_box.exec()
             return
     
+    def change_config(self):
+        if self.ui.config_profile.selectedItems():
+            self.selected_config = self.ui.config_profile.selectedItems()[0].text()
+            with open(os.path.join(self.path, self.selected_config), "r") as f:
+                data = [i.replace("\n","") for i in f.readlines()]
+                self.ui.res_x_lineEdit.setText(data[0])
+                self.ui.res_y_lineEdit.setText(data[1])
+                self.ui.video_fps_lineEdit.setText(data[2])
+                self.ui.no_photo_match_lineEdit.setText(data[3])
+                self.ui.nfeature_obj_lineEdit.setText(data[4])
+                self.ui.nfeature_det_lineEdit.setText(data[5])
+                self.ui.x_off_lineEdit.setText(data[6])
+                self.ui.y_off_lineEdit.setText(data[7])
+                self.ui.width_off_lineEdit.setText(data[8])
+                self.ui.height_off_lineEdit.setText(data[9])
+                self.ui.min_x_lineEdit.setText(data[10])
+                self.ui.min_y_lineEdit.setText(data[11])
+                self.ui.ratio_lineEdit.setText(data[12])
+                self.ui.min_match_lineEdit.setText(data[13])
+                self.ui.max_size_lineEdit.setText(data[14])
+
+        
     def save_config(self):
         entries = []
         entries.append(self.ui.res_x_lineEdit.text()) 
@@ -324,7 +415,7 @@ class MainWindow(QMainWindow):
         else:
             entries.append("")
         entries.append(self.ui.video_name_LineEdit.text())
-        print(entries)
+        # print(entries)
         
 
         for i in range(len(entries) - 2):
@@ -370,7 +461,7 @@ class MainWindow(QMainWindow):
             except requests.exceptions.ConnectionError:
                 pass
         
-        with open("config.txt", "w") as f:
+        with open(os.path.join(self.path, self.selected_config), "w") as f:
             for i in range(15):
                 if entries[i] == "":
                     f.write(f"{self.config_list[i]}\n")
@@ -379,7 +470,7 @@ class MainWindow(QMainWindow):
             for i in range(15, len(entries)):
                 f.write(f"{entries[i]}\n")
         
-        with open("config.txt","r") as f:
+        with open(os.path.join(self.path, self.selected_config),"r") as f:
             final = [i.replace("\n","") for i in f.readlines()]
 
         # print(final)
@@ -396,6 +487,46 @@ class MainWindow(QMainWindow):
         # Show the message box
         msg_box.exec()
 
+    def save_profile(self):
+        dialog = NameDialogo(self)
+        dialog.exec()
+        self.ui.config_profile.clear()
+        self.ui.config_profile.addItems(natsort.os_sorted(os.listdir(self.path)))
+    def update_profile(self):
+        if self.ui.config_profile.selectedItems():
+            with open(os.path.join(self.path,self.selected_config), "w") as f:
+                data=[]
+                data.append(self.ui.res_x_lineEdit.text()+"\n")
+                data.append(self.ui.res_y_lineEdit.text()+"\n")   
+                data.append(self.ui.video_fps_lineEdit.text()+"\n")   
+                data.append(self.ui.no_photo_match_lineEdit.text()+"\n")   
+                data.append(self.ui.nfeature_obj_lineEdit.text()+"\n")   
+                data.append(self.ui.nfeature_det_lineEdit.text()+"\n")   
+                data.append(self.ui.x_off_lineEdit.text()+"\n")   
+                data.append(self.ui.y_off_lineEdit.text()+"\n")   
+                data.append(self.ui.width_off_lineEdit.text()+"\n")   
+                data.append(self.ui.height_off_lineEdit.text()+"\n")   
+                data.append(self.ui.min_x_lineEdit.text()+"\n")   
+                data.append(self.ui.min_y_lineEdit.text()+"\n")   
+                data.append(self.ui.ratio_lineEdit.text()+"\n")   
+                data.append(self.ui.min_match_lineEdit.text()+"\n")   
+                data.append(self.ui.max_size_lineEdit.text()+"\n")
+                print(data)
+                f.writelines(data)
+        else:
+            msg_box = QMessageBox()
+            msg_box.setText('Select a profile first!')
+            msg_box.setWindowTitle('Invalid')
+            
+            
+            # Set stylesheet for message box buttons
+            msg_box.setStyleSheet('QPushButton { color: black; }')
+            
+            # Show the message box
+            msg_box.exec()
+        pass
+
+# For Image Viewer page
     def load_image(self):
         response = requests.get(self.url+f"get-image/boxed/{self.image_dir}/{self.image_list[self.image_index]}")
 
@@ -431,6 +562,8 @@ class MainWindow(QMainWindow):
         
     def delete_img(self):
         pass
+
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

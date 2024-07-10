@@ -201,8 +201,8 @@
 #                 sys.stdout.flush() 
 #                 break
 #         counter += 1
-#     if "classes.txt" in os.listdir(destination_dir):
-#         os.remove(os.path.join(destination_dir,"classes.txt"))
+#     # if "classes.txt" in os.listdir(destination_dir):
+#     #     os.remove(os.path.join(destination_dir,"classes.txt"))
 #     return destination_dir
 
 
@@ -210,26 +210,6 @@
 #     print("STARTING")
 #     sys.stdout.flush() 
 
-#     with open("home/rebox/config.txt", "r") as f:
-#     data = [i.replace("\n","") for i in f.readlines()]
-#     resolution_x = int(data[0])
-#     resolution_y = int(data[1])
-#     video_fps = int(data[2])
-#     no_photo_match = int(data[3])
-#     nfeature_obj = int(data[4])
-#     nfeature_detect_zone = int(data[5])
-#     x_offset_for_detection = float(data[6])
-#     y_offset_for_detection = float(data[7])
-#     width_offset = float(data[8])
-#     height_offset = float(data[9])
-#     min_x_offset_same_cls = float(data[10])    
-#     min_y_offset_same_cls = float(data[11])
-#     ratio_threshold = float(data[12])
-#     min_matches = int(data[13])
-#     max_size_acceptable = float(data[14])
-#     project_folder = data[15]
-#     video_name = data[16] 
-    
     
 #     # initialize img and lbl folders
 #     img_folder = os.path.join(config.project_folder,"images")
@@ -296,6 +276,6 @@
 #     boxed_path = plot_label(dest_dir)
 
 #     # make video
-#     to_video(boxed_path, "cool_video", config.video_fps)
+#     to_video(boxed_path, config.video_name, config.video_fps)
 
 #     # print("HI")

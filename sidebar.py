@@ -26,72 +26,73 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1028, 804)
+        MainWindow.resize(1119, 773)
         MainWindow.setMinimumSize(QSize(300, 0))
         MainWindow.setStyleSheet(u"background-color: rgb(222, 221, 218);")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.icon_only_widget = QWidget(self.centralwidget)
-        self.icon_only_widget.setObjectName(u"icon_only_widget")
-        self.icon_only_widget.setMaximumSize(QSize(70, 16777215))
-        self.icon_only_widget.setStyleSheet(u"background-color: rgb(94, 92, 100);")
-        self.verticalLayout_2 = QVBoxLayout(self.icon_only_widget)
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.verticalSpacer_3 = QSpacerItem(18, 94, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.icon_name_widget = QWidget(self.centralwidget)
+        self.icon_name_widget.setObjectName(u"icon_name_widget")
+        self.icon_name_widget.setMinimumSize(QSize(200, 0))
+        self.icon_name_widget.setMaximumSize(QSize(200, 16777215))
+        self.icon_name_widget.setStyleSheet(u"background-color: rgb(94, 92, 100);")
+        self.verticalLayout = QVBoxLayout(self.icon_name_widget)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalSpacer_4 = QSpacerItem(18, 94, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
-        self.verticalLayout_2.addItem(self.verticalSpacer_3)
+        self.verticalLayout.addItem(self.verticalSpacer_4)
 
-        self.home_1 = QPushButton(self.icon_only_widget)
-        self.home_1.setObjectName(u"home_1")
-        self.home_1.setCheckable(True)
-        self.home_1.setChecked(True)
-        self.home_1.setAutoExclusive(True)
+        self.home_2 = QPushButton(self.icon_name_widget)
+        self.home_2.setObjectName(u"home_2")
+        self.home_2.setCheckable(True)
+        self.home_2.setChecked(True)
+        self.home_2.setAutoExclusive(True)
 
-        self.verticalLayout_2.addWidget(self.home_1)
+        self.verticalLayout.addWidget(self.home_2)
 
-        self.script_1 = QPushButton(self.icon_only_widget)
-        self.script_1.setObjectName(u"script_1")
-        self.script_1.setCheckable(True)
-        self.script_1.setAutoExclusive(True)
+        self.script_2 = QPushButton(self.icon_name_widget)
+        self.script_2.setObjectName(u"script_2")
+        self.script_2.setCheckable(True)
+        self.script_2.setAutoExclusive(True)
 
-        self.verticalLayout_2.addWidget(self.script_1)
+        self.verticalLayout.addWidget(self.script_2)
 
-        self.config_1 = QPushButton(self.icon_only_widget)
-        self.config_1.setObjectName(u"config_1")
-        self.config_1.setCheckable(True)
-        self.config_1.setAutoExclusive(True)
+        self.config_2 = QPushButton(self.icon_name_widget)
+        self.config_2.setObjectName(u"config_2")
+        self.config_2.setCheckable(True)
+        self.config_2.setAutoExclusive(True)
 
-        self.verticalLayout_2.addWidget(self.config_1)
+        self.verticalLayout.addWidget(self.config_2)
 
-        self.images_1 = QPushButton(self.icon_only_widget)
-        self.images_1.setObjectName(u"images_1")
-        self.images_1.setCheckable(True)
-        self.images_1.setAutoExclusive(True)
+        self.images_2 = QPushButton(self.icon_name_widget)
+        self.images_2.setObjectName(u"images_2")
+        self.images_2.setCheckable(True)
+        self.images_2.setAutoExclusive(True)
 
-        self.verticalLayout_2.addWidget(self.images_1)
+        self.verticalLayout.addWidget(self.images_2)
 
-        self.videos_1 = QPushButton(self.icon_only_widget)
-        self.videos_1.setObjectName(u"videos_1")
-        self.videos_1.setCheckable(True)
-        self.videos_1.setAutoExclusive(True)
+        self.videos_2 = QPushButton(self.icon_name_widget)
+        self.videos_2.setObjectName(u"videos_2")
+        self.videos_2.setCheckable(True)
+        self.videos_2.setAutoExclusive(True)
 
-        self.verticalLayout_2.addWidget(self.videos_1)
+        self.verticalLayout.addWidget(self.videos_2)
 
-        self.verticalSpacer = QSpacerItem(18, 448, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.verticalSpacer_2 = QSpacerItem(18, 448, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.verticalLayout_2.addItem(self.verticalSpacer)
+        self.verticalLayout.addItem(self.verticalSpacer_2)
 
-        self.exit_1 = QPushButton(self.icon_only_widget)
-        self.exit_1.setObjectName(u"exit_1")
-        self.exit_1.setCheckable(True)
-        self.exit_1.setAutoExclusive(True)
+        self.exit_2 = QPushButton(self.icon_name_widget)
+        self.exit_2.setObjectName(u"exit_2")
+        self.exit_2.setCheckable(True)
+        self.exit_2.setAutoExclusive(True)
 
-        self.verticalLayout_2.addWidget(self.exit_1)
+        self.verticalLayout.addWidget(self.exit_2)
 
 
-        self.gridLayout.addWidget(self.icon_only_widget, 0, 0, 1, 1)
+        self.gridLayout.addWidget(self.icon_name_widget, 0, 1, 1, 1)
 
         self.widget_3 = QWidget(self.centralwidget)
         self.widget_3.setObjectName(u"widget_3")
@@ -231,6 +232,13 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_4.addItem(self.horizontalSpacer_3)
 
+        self.download_image = QPushButton(self.upper_image_page)
+        self.download_image.setObjectName(u"download_image")
+        self.download_image.setMinimumSize(QSize(0, 30))
+        self.download_image.setStyleSheet(u"background-color: rgb(94, 92, 100);")
+
+        self.horizontalLayout_4.addWidget(self.download_image)
+
         self.delete_img = QPushButton(self.upper_image_page)
         self.delete_img.setObjectName(u"delete_img")
         self.delete_img.setMinimumSize(QSize(0, 30))
@@ -284,11 +292,11 @@ class Ui_MainWindow(object):
         self.stackedWidget.addWidget(self.videos_page)
         self.configs_page = QWidget()
         self.configs_page.setObjectName(u"configs_page")
-        self.verticalLayout_11 = QVBoxLayout(self.configs_page)
-        self.verticalLayout_11.setObjectName(u"verticalLayout_11")
-        self.horizontalLayout_3 = QHBoxLayout()
-        self.horizontalLayout_3.setSpacing(70)
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.verticalLayout_16 = QVBoxLayout(self.configs_page)
+        self.verticalLayout_16.setObjectName(u"verticalLayout_16")
+        self.horizontalLayout_7 = QHBoxLayout()
+        self.horizontalLayout_7.setSpacing(30)
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
         self.config_list = QWidget(self.configs_page)
         self.config_list.setObjectName(u"config_list")
         self.config_list.setMaximumSize(QSize(300, 16777215))
@@ -602,11 +610,10 @@ class Ui_MainWindow(object):
         self.verticalLayout_13.addLayout(self.verticalLayout_9)
 
 
-        self.horizontalLayout_3.addWidget(self.config_list)
+        self.horizontalLayout_7.addWidget(self.config_list)
 
-        self.verticalLayout_10 = QVBoxLayout()
-        self.verticalLayout_10.setSpacing(30)
-        self.verticalLayout_10.setObjectName(u"verticalLayout_10")
+        self.verticalLayout_15 = QVBoxLayout()
+        self.verticalLayout_15.setObjectName(u"verticalLayout_15")
         self.project_widget = QWidget(self.configs_page)
         self.project_widget.setObjectName(u"project_widget")
         self.project_widget.setMaximumSize(QSize(10000, 600))
@@ -622,14 +629,18 @@ class Ui_MainWindow(object):
 
         self.project_listwidget = QListWidget(self.project_widget)
         self.project_listwidget.setObjectName(u"project_listwidget")
-        self.project_listwidget.setMaximumSize(QSize(600, 16777215))
+        self.project_listwidget.setMaximumSize(QSize(1000, 16777215))
         self.project_listwidget.setStyleSheet(u"color: rgb(0, 0, 0);")
 
         self.verticalLayout_3.addWidget(self.project_listwidget)
 
 
-        self.verticalLayout_10.addWidget(self.project_widget)
+        self.verticalLayout_15.addWidget(self.project_widget)
 
+        self.horizontalLayout_3 = QHBoxLayout()
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.verticalLayout_10 = QVBoxLayout()
+        self.verticalLayout_10.setObjectName(u"verticalLayout_10")
         self.label_7 = QLabel(self.configs_page)
         self.label_7.setObjectName(u"label_7")
         self.label_7.setFont(font2)
@@ -644,8 +655,43 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_10.addWidget(self.current_config)
 
+
+        self.horizontalLayout_3.addLayout(self.verticalLayout_10)
+
+        self.verticalLayout_11 = QVBoxLayout()
+        self.verticalLayout_11.setObjectName(u"verticalLayout_11")
+        self.label_2 = QLabel(self.configs_page)
+        self.label_2.setObjectName(u"label_2")
+        self.label_2.setMaximumSize(QSize(200, 16777215))
+        font3 = QFont()
+        font3.setPointSize(15)
+        self.label_2.setFont(font3)
+        self.label_2.setStyleSheet(u"color: rgb(0, 0, 0);")
+
+        self.verticalLayout_11.addWidget(self.label_2)
+
+        self.config_profile = QListWidget(self.configs_page)
+        self.config_profile.setObjectName(u"config_profile")
+        self.config_profile.setMaximumSize(QSize(200, 16777215))
+        self.config_profile.setStyleSheet(u"color: rgb(0, 0, 0);")
+
+        self.verticalLayout_11.addWidget(self.config_profile)
+
+
+        self.horizontalLayout_3.addLayout(self.verticalLayout_11)
+
+
+        self.verticalLayout_15.addLayout(self.horizontalLayout_3)
+
+
+        self.horizontalLayout_7.addLayout(self.verticalLayout_15)
+
+
+        self.verticalLayout_16.addLayout(self.horizontalLayout_7)
+
         self.formLayout_9 = QFormLayout()
         self.formLayout_9.setObjectName(u"formLayout_9")
+        self.formLayout_9.setContentsMargins(10, -1, -1, -1)
         self.video_name_Label = QLabel(self.configs_page)
         self.video_name_Label.setObjectName(u"video_name_Label")
         self.video_name_Label.setStyleSheet(u"color: rgb(0, 0, 0);")
@@ -660,20 +706,34 @@ class Ui_MainWindow(object):
         self.formLayout_9.setWidget(0, QFormLayout.FieldRole, self.video_name_LineEdit)
 
 
-        self.verticalLayout_10.addLayout(self.formLayout_9)
+        self.verticalLayout_16.addLayout(self.formLayout_9)
 
-
-        self.horizontalLayout_3.addLayout(self.verticalLayout_10)
-
-
-        self.verticalLayout_11.addLayout(self.horizontalLayout_3)
-
+        self.horizontalLayout_9 = QHBoxLayout()
+        self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
+        self.horizontalLayout_9.setContentsMargins(400, -1, -1, -1)
         self.save_button = QPushButton(self.configs_page)
         self.save_button.setObjectName(u"save_button")
         self.save_button.setMinimumSize(QSize(0, 30))
         self.save_button.setStyleSheet(u"background-color: rgb(94, 92, 100);")
 
-        self.verticalLayout_11.addWidget(self.save_button)
+        self.horizontalLayout_9.addWidget(self.save_button)
+
+        self.save_new_profile = QPushButton(self.configs_page)
+        self.save_new_profile.setObjectName(u"save_new_profile")
+        self.save_new_profile.setMinimumSize(QSize(0, 30))
+        self.save_new_profile.setStyleSheet(u"background-color: rgb(94, 92, 100);")
+
+        self.horizontalLayout_9.addWidget(self.save_new_profile)
+
+        self.update_profile = QPushButton(self.configs_page)
+        self.update_profile.setObjectName(u"update_profile")
+        self.update_profile.setMinimumSize(QSize(0, 30))
+        self.update_profile.setStyleSheet(u"background-color: rgb(94, 92, 100);")
+
+        self.horizontalLayout_9.addWidget(self.update_profile)
+
+
+        self.verticalLayout_16.addLayout(self.horizontalLayout_9)
 
         self.stackedWidget.addWidget(self.configs_page)
 
@@ -682,66 +742,65 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.widget_3, 0, 2, 1, 1)
 
-        self.icon_name_widget = QWidget(self.centralwidget)
-        self.icon_name_widget.setObjectName(u"icon_name_widget")
-        self.icon_name_widget.setMinimumSize(QSize(200, 0))
-        self.icon_name_widget.setMaximumSize(QSize(200, 16777215))
-        self.icon_name_widget.setStyleSheet(u"background-color: rgb(94, 92, 100);")
-        self.verticalLayout = QVBoxLayout(self.icon_name_widget)
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalSpacer_4 = QSpacerItem(18, 94, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.icon_only_widget = QWidget(self.centralwidget)
+        self.icon_only_widget.setObjectName(u"icon_only_widget")
+        self.icon_only_widget.setMaximumSize(QSize(70, 16777215))
+        self.icon_only_widget.setStyleSheet(u"background-color: rgb(94, 92, 100);")
+        self.verticalLayout_2 = QVBoxLayout(self.icon_only_widget)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalSpacer_3 = QSpacerItem(18, 94, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
-        self.verticalLayout.addItem(self.verticalSpacer_4)
+        self.verticalLayout_2.addItem(self.verticalSpacer_3)
 
-        self.home_2 = QPushButton(self.icon_name_widget)
-        self.home_2.setObjectName(u"home_2")
-        self.home_2.setCheckable(True)
-        self.home_2.setChecked(True)
-        self.home_2.setAutoExclusive(True)
+        self.home_1 = QPushButton(self.icon_only_widget)
+        self.home_1.setObjectName(u"home_1")
+        self.home_1.setCheckable(True)
+        self.home_1.setChecked(True)
+        self.home_1.setAutoExclusive(True)
 
-        self.verticalLayout.addWidget(self.home_2)
+        self.verticalLayout_2.addWidget(self.home_1)
 
-        self.script_2 = QPushButton(self.icon_name_widget)
-        self.script_2.setObjectName(u"script_2")
-        self.script_2.setCheckable(True)
-        self.script_2.setAutoExclusive(True)
+        self.script_1 = QPushButton(self.icon_only_widget)
+        self.script_1.setObjectName(u"script_1")
+        self.script_1.setCheckable(True)
+        self.script_1.setAutoExclusive(True)
 
-        self.verticalLayout.addWidget(self.script_2)
+        self.verticalLayout_2.addWidget(self.script_1)
 
-        self.config_2 = QPushButton(self.icon_name_widget)
-        self.config_2.setObjectName(u"config_2")
-        self.config_2.setCheckable(True)
-        self.config_2.setAutoExclusive(True)
+        self.config_1 = QPushButton(self.icon_only_widget)
+        self.config_1.setObjectName(u"config_1")
+        self.config_1.setCheckable(True)
+        self.config_1.setAutoExclusive(True)
 
-        self.verticalLayout.addWidget(self.config_2)
+        self.verticalLayout_2.addWidget(self.config_1)
 
-        self.images_2 = QPushButton(self.icon_name_widget)
-        self.images_2.setObjectName(u"images_2")
-        self.images_2.setCheckable(True)
-        self.images_2.setAutoExclusive(True)
+        self.images_1 = QPushButton(self.icon_only_widget)
+        self.images_1.setObjectName(u"images_1")
+        self.images_1.setCheckable(True)
+        self.images_1.setAutoExclusive(True)
 
-        self.verticalLayout.addWidget(self.images_2)
+        self.verticalLayout_2.addWidget(self.images_1)
 
-        self.videos_2 = QPushButton(self.icon_name_widget)
-        self.videos_2.setObjectName(u"videos_2")
-        self.videos_2.setCheckable(True)
-        self.videos_2.setAutoExclusive(True)
+        self.videos_1 = QPushButton(self.icon_only_widget)
+        self.videos_1.setObjectName(u"videos_1")
+        self.videos_1.setCheckable(True)
+        self.videos_1.setAutoExclusive(True)
 
-        self.verticalLayout.addWidget(self.videos_2)
+        self.verticalLayout_2.addWidget(self.videos_1)
 
-        self.verticalSpacer_2 = QSpacerItem(18, 448, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.verticalSpacer = QSpacerItem(18, 448, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.verticalLayout.addItem(self.verticalSpacer_2)
+        self.verticalLayout_2.addItem(self.verticalSpacer)
 
-        self.exit_2 = QPushButton(self.icon_name_widget)
-        self.exit_2.setObjectName(u"exit_2")
-        self.exit_2.setCheckable(True)
-        self.exit_2.setAutoExclusive(True)
+        self.exit_1 = QPushButton(self.icon_only_widget)
+        self.exit_1.setObjectName(u"exit_1")
+        self.exit_1.setCheckable(True)
+        self.exit_1.setAutoExclusive(True)
 
-        self.verticalLayout.addWidget(self.exit_2)
+        self.verticalLayout_2.addWidget(self.exit_1)
 
 
-        self.gridLayout.addWidget(self.icon_name_widget, 0, 1, 1, 1)
+        self.gridLayout.addWidget(self.icon_only_widget, 0, 0, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -771,12 +830,12 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.home_1.setText(QCoreApplication.translate("MainWindow", u"H", None))
-        self.script_1.setText(QCoreApplication.translate("MainWindow", u"S", None))
-        self.config_1.setText(QCoreApplication.translate("MainWindow", u"C", None))
-        self.images_1.setText(QCoreApplication.translate("MainWindow", u"I", None))
-        self.videos_1.setText(QCoreApplication.translate("MainWindow", u"V", None))
-        self.exit_1.setText(QCoreApplication.translate("MainWindow", u"E", None))
+        self.home_2.setText(QCoreApplication.translate("MainWindow", u"Home", None))
+        self.script_2.setText(QCoreApplication.translate("MainWindow", u"Script", None))
+        self.config_2.setText(QCoreApplication.translate("MainWindow", u"Configs", None))
+        self.images_2.setText(QCoreApplication.translate("MainWindow", u"Images", None))
+        self.videos_2.setText(QCoreApplication.translate("MainWindow", u"Videos", None))
+        self.exit_2.setText(QCoreApplication.translate("MainWindow", u"Exit", None))
         self.toggle.setText(QCoreApplication.translate("MainWindow", u"Toggle", None))
         self.refresh_button.setText(QCoreApplication.translate("MainWindow", u"Refresh", None))
         self.server_status.setText(QCoreApplication.translate("MainWindow", u"Server: Disconnected", None))
@@ -827,6 +886,7 @@ class Ui_MainWindow(object):
 "<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
         self.browse_img.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
         self.image_view_status.setText(QCoreApplication.translate("MainWindow", u"Choose an image folder", None))
+        self.download_image.setText(QCoreApplication.translate("MainWindow", u"Download", None))
         self.delete_img.setText(QCoreApplication.translate("MainWindow", u"Delete", None))
         self.image_box.setText("")
         self.prev_img.setText(QCoreApplication.translate("MainWindow", u"Previous Image", None))
@@ -853,13 +913,16 @@ class Ui_MainWindow(object):
         self.max_size_label.setText(QCoreApplication.translate("MainWindow", u"max_size_acceptable", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Project Folder", None))
         self.label_7.setText(QCoreApplication.translate("MainWindow", u"Current configs", None))
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Profile", None))
         self.video_name_Label.setText(QCoreApplication.translate("MainWindow", u"video_name", None))
         self.save_button.setText(QCoreApplication.translate("MainWindow", u"Save", None))
-        self.home_2.setText(QCoreApplication.translate("MainWindow", u"Home", None))
-        self.script_2.setText(QCoreApplication.translate("MainWindow", u"Script", None))
-        self.config_2.setText(QCoreApplication.translate("MainWindow", u"Configs", None))
-        self.images_2.setText(QCoreApplication.translate("MainWindow", u"Images", None))
-        self.videos_2.setText(QCoreApplication.translate("MainWindow", u"Videos", None))
-        self.exit_2.setText(QCoreApplication.translate("MainWindow", u"Exit", None))
+        self.save_new_profile.setText(QCoreApplication.translate("MainWindow", u"Save as new profile", None))
+        self.update_profile.setText(QCoreApplication.translate("MainWindow", u"Update this profile", None))
+        self.home_1.setText(QCoreApplication.translate("MainWindow", u"H", None))
+        self.script_1.setText(QCoreApplication.translate("MainWindow", u"S", None))
+        self.config_1.setText(QCoreApplication.translate("MainWindow", u"C", None))
+        self.images_1.setText(QCoreApplication.translate("MainWindow", u"I", None))
+        self.videos_1.setText(QCoreApplication.translate("MainWindow", u"V", None))
+        self.exit_1.setText(QCoreApplication.translate("MainWindow", u"E", None))
     # retranslateUi
 
