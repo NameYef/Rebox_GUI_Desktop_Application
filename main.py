@@ -3,44 +3,54 @@ import os
 import natsort
 import requests
 import time
-from PySide6.QtCore import QProcess, QIODevice, QUrl, QEventLoop, QTimer
+from PySide6.QtCore import QProcess, QIODevice, QUrl, QEventLoop, QTimer, QByteArray, QBuffer
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QDialog
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest
+from PySide6.QtMultimedia import QMediaPlayer
 from PySide6 import QtGui
 from sidebar import Ui_MainWindow
 from img_dialog import Ui_Dialog
 from name_dialog import Ui_NameDialog
 
-# ONLY FOR IMAGE VIEWER PAGE DIALOG
+# Dialog for image viewer
 class Dialogo(Ui_Dialog, QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, parent, mode):
         super().__init__(parent)
         self.par = parent
         self.exit = False
+        self.mode = mode
+
         self.setupUi(self)
         self.ok.clicked.connect(self.accept)
         self.cancel.clicked.connect(self.reject)
-        self.img_folder_listWidget.clear()
+        self.folder_listWidget.clear()
 
         # Get the list of directories inside the base directory
         try:
-            directories = requests.get(self.par.url+"listdir/boxed").json()
+
+            directories = requests.get(self.par.url+f"listdir/{self.mode}").json()
             # directories = natsort.os_sorted([os.path.join(dir,d) for d in os.listdir(dir) if os.path.isdir(os.path.join(dir, d))])
 
             # Add directories to the list widget
-            self.img_folder_listWidget.addItems(directories)
+            self.folder_listWidget.addItems(directories)
         except requests.exceptions.ConnectionError:
             print("OFFLINE MODE")
-            self.img_folder_listWidget.addItems(["OFFLINE"])
+            self.folder_listWidget.addItems(["OFFLINE"])
 
     def accept(self):
-        if self.img_folder_listWidget.selectedItems():
-            self.par.image_dir = self.img_folder_listWidget.selectedItems()[0].text()
-            self.par.image_list = requests.get(self.par.url+f"listdir/boxed/{self.par.image_dir}").json()
-            
-            self.par.image_index = 0
-            self.par.load_image()
-            
+        if self.mode == "boxed":
+            if self.folder_listWidget.selectedItems():
+                self.par.image_dir = self.folder_listWidget.selectedItems()[0].text()
+                self.par.image_list = requests.get(self.par.url+f"listdir/boxed/{self.par.image_dir}").json()
+                
+                self.par.image_index = 0
+                self.par.load_image()
+        elif self.mode == "videos":
+            if self.folder_listWidget.selectedItems():
+                self.par.video_dir = "videos/"+self.folder_listWidget.selectedItems()[0].text()
+                
+                self.par.load_video()
+# Dialog for new config profile saving
 class NameDialogo(Ui_NameDialog,QDialog):
     def __init__(self, parent = None):
         super().__init__(parent)
@@ -140,6 +150,9 @@ class MainWindow(QMainWindow):
         self.ui.browse_img.clicked.connect(self.browse_img)
         self.ui.delete_img.clicked.connect(self.delete_img)
 
+        self.ui.browse_vid.clicked.connect(self.browse_vid)
+        
+
         self.ui.console_log.setReadOnly(True)
         self.ui.current_config.setReadOnly(True)
         # self.process = QProcess(self)
@@ -167,6 +180,7 @@ class MainWindow(QMainWindow):
         self.ui.video_name_LineEdit.setPlaceholderText("Enter boxed video name")
         self.process = None
         self.manager = QNetworkAccessManager(self)
+        self.video_manager = QNetworkAccessManager(self)
         #    Indexes         config_list
         #       0        {"resolution_x":"",              # resolutions
         #       1         "resolution_y":"",
@@ -214,6 +228,15 @@ class MainWindow(QMainWindow):
         self.image_dir = ""
         self.image_list = []
         self.image_index = 0
+
+        self.video_dir = ""
+        self.video_list = []
+        self.video_index = 0
+        
+        self.media_player = QMediaPlayer(self)
+        self.media_player.setVideoOutput(self.ui.video_screen)
+
+
         # self.test_image = os.path.join("./images",self.image_dir[self.img_index])
         # self.ui.image_box.setScaledContents(True)
         # pixmap = QtGui.QPixmap(self.test_image)
@@ -392,7 +415,6 @@ class MainWindow(QMainWindow):
                 self.ui.min_match_lineEdit.setText(data[13])
                 self.ui.max_size_lineEdit.setText(data[14])
 
-        
     def save_config(self):
         entries = []
         entries.append(self.ui.res_x_lineEdit.text()) 
@@ -492,6 +514,7 @@ class MainWindow(QMainWindow):
         dialog.exec()
         self.ui.config_profile.clear()
         self.ui.config_profile.addItems(natsort.os_sorted(os.listdir(self.path)))
+
     def update_profile(self):
         if self.ui.config_profile.selectedItems():
             with open(os.path.join(self.path,self.selected_config), "w") as f:
@@ -556,13 +579,71 @@ class MainWindow(QMainWindow):
         # dialog = QDialog(self)
         # dialog.setWindowTitle("Choose an image folder")
         # dialog.resize(500,400)
-        dialog = Dialogo(self)
+        dialog = Dialogo(self, "boxed")
         dialog.setWindowTitle("Choose an image folder")
         dialog.exec()
         
     def delete_img(self):
         pass
+        
+    def download_img(self):
+        pass
+# For Video Player page
+    def load_video(self):
+        # response = requests.get(self.url + f"get-video/{self.video_dir}")
+        
+        # if response.status_code == 200:
+        #     video_data = QByteArray()
+        #     for chunk in response.iter_content(chunk_size=8192):
+        #         print(chunk)
+        #         video_data.append(chunk)
+        #     print(video_data)
+        #     self.buffer = QBuffer(video_data)
+        #     self.buffer.open(QIODevice.ReadOnly)
 
+        #     self.media_player.setSourceDevice(self.buffer, "video/mp4")
+        #     # self.media_player.play()
+        # else:
+        #     print("Failed to get video")
+        url = self.url + f"get-video/{self.video_dir}"
+        request = QNetworkRequest(url)
+
+        # Connect the reply to a slot to handle the response
+        reply = self.video_manager.get(request)
+        reply.finished.connect(lambda: self.handle_network_reply(reply))
+        print(reply)
+    def handle_network_reply(self, reply):
+        # if reply.error():
+        #     print(f"Failed to get video: {reply.errorString()}")
+        #     return
+
+        # Save the video to a temporary file
+        temp_video_path = 'temp_video.mp4'
+        with open(temp_video_path, 'wb') as f:
+            f.write(reply.readAll().data())
+
+        # Set the media player to use the temporary file
+        self.media_player.setSource(QUrl.fromLocalFile(temp_video_path))
+        self.media_player.play()
+
+
+
+
+
+
+    def browse_vid(self):
+        dialog = Dialogo(self, "videos")
+        dialog.setWindowTitle("Choose a video")
+        dialog.exec()
+
+    def pause_resume(self):
+        pass
+
+    def volume_slide(self):
+        pass
+
+    def progress_slide(self):
+        pass
 
 
 if __name__ == "__main__":

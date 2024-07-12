@@ -29,11 +29,11 @@ class Ui_Dialog(object):
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.img_folder_listWidget = QListWidget(Dialog)
-        self.img_folder_listWidget.setObjectName(u"img_folder_listWidget")
-        self.img_folder_listWidget.setStyleSheet(u"color: rgb(0, 0, 0);")
+        self.folder_listWidget = QListWidget(Dialog)
+        self.folder_listWidget.setObjectName(u"folder_listWidget")
+        self.folder_listWidget.setStyleSheet(u"color: rgb(0, 0, 0);")
 
-        self.verticalLayout.addWidget(self.img_folder_listWidget)
+        self.verticalLayout.addWidget(self.folder_listWidget)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")

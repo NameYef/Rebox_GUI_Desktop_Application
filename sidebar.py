@@ -15,10 +15,12 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtMultimediaWidgets import QVideoWidget
 from PySide6.QtWidgets import (QApplication, QFormLayout, QGridLayout, QHBoxLayout,
     QLabel, QLineEdit, QListWidget, QListWidgetItem,
-    QMainWindow, QPushButton, QSizePolicy, QSpacerItem,
-    QStackedWidget, QTextEdit, QVBoxLayout, QWidget)
+    QMainWindow, QPushButton, QSizePolicy, QSlider,
+    QSpacerItem, QStackedWidget, QTextEdit, QVBoxLayout,
+    QWidget)
 
 from custom_widget import ScaledLabel
 
@@ -285,10 +287,97 @@ class Ui_MainWindow(object):
         self.stackedWidget.addWidget(self.images_page)
         self.videos_page = QWidget()
         self.videos_page.setObjectName(u"videos_page")
-        self.label_9 = QLabel(self.videos_page)
-        self.label_9.setObjectName(u"label_9")
-        self.label_9.setGeometry(QRect(210, 220, 381, 201))
-        self.label_9.setStyleSheet(u"color: rgb(0, 0, 0);")
+        self.verticalLayout_19 = QVBoxLayout(self.videos_page)
+        self.verticalLayout_19.setObjectName(u"verticalLayout_19")
+        self.verticalLayout_18 = QVBoxLayout()
+        self.verticalLayout_18.setObjectName(u"verticalLayout_18")
+        self.upper_video_page = QWidget(self.videos_page)
+        self.upper_video_page.setObjectName(u"upper_video_page")
+        self.upper_video_page.setMaximumSize(QSize(16777215, 50))
+        self.horizontalLayout_8 = QHBoxLayout(self.upper_video_page)
+        self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
+        self.browse_vid = QPushButton(self.upper_video_page)
+        self.browse_vid.setObjectName(u"browse_vid")
+        self.browse_vid.setMinimumSize(QSize(0, 30))
+        self.browse_vid.setStyleSheet(u"background-color: rgb(94, 92, 100);")
+
+        self.horizontalLayout_8.addWidget(self.browse_vid)
+
+        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_8.addItem(self.horizontalSpacer_5)
+
+        self.label_8 = QLabel(self.upper_video_page)
+        self.label_8.setObjectName(u"label_8")
+        self.label_8.setMinimumSize(QSize(100, 0))
+        self.label_8.setMaximumSize(QSize(500, 16777215))
+        self.label_8.setStyleSheet(u"color: rgb(0, 0, 0);")
+        self.label_8.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.horizontalLayout_8.addWidget(self.label_8, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_8.addItem(self.horizontalSpacer_4)
+
+        self.download_vid = QPushButton(self.upper_video_page)
+        self.download_vid.setObjectName(u"download_vid")
+        self.download_vid.setMinimumSize(QSize(0, 30))
+        self.download_vid.setStyleSheet(u"background-color: rgb(94, 92, 100);")
+
+        self.horizontalLayout_8.addWidget(self.download_vid)
+
+        self.delete_vid = QPushButton(self.upper_video_page)
+        self.delete_vid.setObjectName(u"delete_vid")
+        self.delete_vid.setMinimumSize(QSize(0, 30))
+        self.delete_vid.setStyleSheet(u"background-color: rgb(94, 92, 100);")
+
+        self.horizontalLayout_8.addWidget(self.delete_vid)
+
+
+        self.verticalLayout_18.addWidget(self.upper_video_page)
+
+        self.video_screen = QVideoWidget(self.videos_page)
+        self.video_screen.setObjectName(u"video_screen")
+
+        self.verticalLayout_18.addWidget(self.video_screen)
+
+        self.pause_resume = QPushButton(self.videos_page)
+        self.pause_resume.setObjectName(u"pause_resume")
+        self.pause_resume.setMinimumSize(QSize(0, 30))
+        self.pause_resume.setMaximumSize(QSize(100, 16777215))
+        self.pause_resume.setStyleSheet(u"background-color: rgb(94, 92, 100);")
+
+        self.verticalLayout_18.addWidget(self.pause_resume, 0, Qt.AlignmentFlag.AlignHCenter)
+
+        self.lower_video_page = QWidget(self.videos_page)
+        self.lower_video_page.setObjectName(u"lower_video_page")
+        self.lower_video_page.setMinimumSize(QSize(0, 100))
+        self.lower_video_page.setMaximumSize(QSize(16777215, 100))
+        self.verticalLayout_17 = QVBoxLayout(self.lower_video_page)
+        self.verticalLayout_17.setObjectName(u"verticalLayout_17")
+        self.vid_slider = QSlider(self.lower_video_page)
+        self.vid_slider.setObjectName(u"vid_slider")
+        self.vid_slider.setStyleSheet(u"color: rgb(94, 92, 100);")
+        self.vid_slider.setOrientation(Qt.Orientation.Horizontal)
+
+        self.verticalLayout_17.addWidget(self.vid_slider)
+
+        self.volume_slider = QSlider(self.lower_video_page)
+        self.volume_slider.setObjectName(u"volume_slider")
+        self.volume_slider.setMaximumSize(QSize(150, 16777215))
+        self.volume_slider.setStyleSheet(u"color: rgb(94, 92, 100);\n"
+"")
+        self.volume_slider.setOrientation(Qt.Orientation.Horizontal)
+
+        self.verticalLayout_17.addWidget(self.volume_slider)
+
+
+        self.verticalLayout_18.addWidget(self.lower_video_page)
+
+
+        self.verticalLayout_19.addLayout(self.verticalLayout_18)
+
         self.stackedWidget.addWidget(self.videos_page)
         self.configs_page = QWidget()
         self.configs_page.setObjectName(u"configs_page")
@@ -891,7 +980,11 @@ class Ui_MainWindow(object):
         self.image_box.setText("")
         self.prev_img.setText(QCoreApplication.translate("MainWindow", u"Previous Image", None))
         self.next_img.setText(QCoreApplication.translate("MainWindow", u"Next Image", None))
-        self.label_9.setText(QCoreApplication.translate("MainWindow", u"VIDEOS PAGE", None))
+        self.browse_vid.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
+        self.label_8.setText(QCoreApplication.translate("MainWindow", u"Choose a video", None))
+        self.download_vid.setText(QCoreApplication.translate("MainWindow", u"Download", None))
+        self.delete_vid.setText(QCoreApplication.translate("MainWindow", u"Delete", None))
+        self.pause_resume.setText(QCoreApplication.translate("MainWindow", u"Pause", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Resolutions", None))
         self.res_x_label.setText(QCoreApplication.translate("MainWindow", u"resolution_x", None))
         self.res_y_label.setText(QCoreApplication.translate("MainWindow", u"resolution_y", None))
