@@ -4,9 +4,9 @@ import natsort
 import requests
 import time
 from PySide6.QtCore import QProcess, QIODevice, QUrl, QEventLoop, QTimer, QByteArray, QBuffer
-from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QDialog
+from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QDialog, QFileDialog
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkRequest
-from PySide6.QtMultimedia import QMediaPlayer
+from PySide6.QtMultimedia import QMediaPlayer, QAudioOutput
 from PySide6 import QtGui
 from sidebar import Ui_MainWindow
 from img_dialog import Ui_Dialog
@@ -105,8 +105,6 @@ class NameDialogo(Ui_NameDialog,QDialog):
         self.close()
         
 
-
-        
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -148,10 +146,13 @@ class MainWindow(QMainWindow):
         self.ui.next_img.clicked.connect(self.next_img)
         self.ui.prev_img.clicked.connect(self.prev_img)
         self.ui.browse_img.clicked.connect(self.browse_img)
+        self.ui.download_img.clicked.connect(self.download_img)
         self.ui.delete_img.clicked.connect(self.delete_img)
 
         self.ui.browse_vid.clicked.connect(self.browse_vid)
-        
+        self.ui.pause_resume.clicked.connect(self.pause_resume)
+        self.ui.download_vid.clicked.connect(self.download_vid)
+        self.ui.delete_vid.clicked.connect(self.delete_vid)
 
         self.ui.console_log.setReadOnly(True)
         self.ui.current_config.setReadOnly(True)
@@ -181,26 +182,6 @@ class MainWindow(QMainWindow):
         self.process = None
         self.manager = QNetworkAccessManager(self)
         self.video_manager = QNetworkAccessManager(self)
-        #    Indexes         config_list
-        #       0        {"resolution_x":"",              # resolutions
-        #       1         "resolution_y":"",
-        #       2         "video_fps":"",
-        #       3         "no_photo_match":"",            # effectiveness
-        #       4         "nfeature_obj":"",
-        #       5         "nfeature_detect_zone":"",
-        #       6         "x_offset_for_detection":"",    # offsets
-        #       7         "y_offset_for_detection":"",
-        #       8         "width_offset":"",
-        #       9         "height_offset":"",
-        #       10         "min_x_offset_same_cls":"",
-        #       11         "min_y_offset_same_cls":"",
-        #       12         "ratio_threshold":"",           # confidence
-        #       13         "min_matches":"",
-        #       14         "max_size_acceptable":"",
-        #       15         "project_folder":""
-        #       16         "video_name":"",
-        #       17         "":""
-        #                }
         
         self.projects_directory = "./projects"
         self.config_name = ["resolution_x","resolution_y","video_fps","no_photo_match","nfeature_obj","nfeature_detect_zone","x_offset_for_detection","y_offset_for_detection"
@@ -228,27 +209,29 @@ class MainWindow(QMainWindow):
         self.image_dir = ""
         self.image_list = []
         self.image_index = 0
+        self.image = ""
+
 
         self.video_dir = ""
         self.video_list = []
         self.video_index = 0
         
+        self.paused = True
         self.media_player = QMediaPlayer(self)
+        self.audio_output = QAudioOutput(self)
+        self.audio_output.setVolume(100)
         self.media_player.setVideoOutput(self.ui.video_screen)
-
-
-        # self.test_image = os.path.join("./images",self.image_dir[self.img_index])
-        # self.ui.image_box.setScaledContents(True)
-        # pixmap = QtGui.QPixmap(self.test_image)
-        # self.ui.image_box.setPixmap(pixmap)
-        # self.setCentralWidget(self.ui.image_box)
-
+        self.media_player.mediaStatusChanged.connect(self.video_status_change)
+        self.media_player.positionChanged.connect(self.position_changed)
+        self.media_player.durationChanged.connect(self.duration_changed)
+        self.ui.vid_slider.sliderMoved.connect(self.set_position)
+        self.ui.volume_slider.sliderMoved.connect(self.volume_slide)
         
         try: 
             requests.put(self.url+"store-config", json=self.config_list)
         except requests.exceptions.ConnectionError:
             pass
-            # print("OFFLINE MODE")
+            print("OFFLINE MODE")
         with open(os.path.join(self.path, self.selected_config), "w") as f:
             for i in self.config_list:
                 f.write(f"{i}\n")
@@ -551,11 +534,11 @@ class MainWindow(QMainWindow):
 
 # For Image Viewer page
     def load_image(self):
-        response = requests.get(self.url+f"get-image/boxed/{self.image_dir}/{self.image_list[self.image_index]}")
+        self.image = requests.get(self.url+f"get-image/boxed/{self.image_dir}/{self.image_list[self.image_index]}")
 
-        if response.status_code == 200:
+        if self.image.status_code == 200:
             image = QtGui.QPixmap()
-            image.loadFromData(response.content)
+            image.loadFromData(self.image.content)
 
             self.ui.image_box.setPixmap(image)
   
@@ -583,53 +566,28 @@ class MainWindow(QMainWindow):
         dialog.setWindowTitle("Choose an image folder")
         dialog.exec()
         
+    def download_img(self):
+        if self.image != "":
+            save_name, _ = QFileDialog.getSaveFileName(self,"")
+            
+            if save_name:
+                with open(save_name+"jpg", "wb") as f:
+                    f.write(self.image.content)
+        pass
+
     def delete_img(self):
         pass
-        
-    def download_img(self):
-        pass
+
 # For Video Player page
     def load_video(self):
-        # response = requests.get(self.url + f"get-video/{self.video_dir}")
-        
-        # if response.status_code == 200:
-        #     video_data = QByteArray()
-        #     for chunk in response.iter_content(chunk_size=8192):
-        #         print(chunk)
-        #         video_data.append(chunk)
-        #     print(video_data)
-        #     self.buffer = QBuffer(video_data)
-        #     self.buffer.open(QIODevice.ReadOnly)
+        self.pause = True
+        self.ui.pause_resume.setText("Play")
 
-        #     self.media_player.setSourceDevice(self.buffer, "video/mp4")
-        #     # self.media_player.play()
-        # else:
-        #     print("Failed to get video")
-        url = self.url + f"get-video/{self.video_dir}"
-        request = QNetworkRequest(url)
+        self.media_player.setAudioOutput(self.audio_output)
+        self.media_player.setSource(QUrl(self.url+f"get-video/{self.video_dir}"))
 
-        # Connect the reply to a slot to handle the response
-        reply = self.video_manager.get(request)
-        reply.finished.connect(lambda: self.handle_network_reply(reply))
-        print(reply)
-    def handle_network_reply(self, reply):
-        # if reply.error():
-        #     print(f"Failed to get video: {reply.errorString()}")
-        #     return
-
-        # Save the video to a temporary file
-        temp_video_path = 'temp_video.mp4'
-        with open(temp_video_path, 'wb') as f:
-            f.write(reply.readAll().data())
-
-        # Set the media player to use the temporary file
-        self.media_player.setSource(QUrl.fromLocalFile(temp_video_path))
         self.media_player.play()
-
-
-
-
-
+        self.media_player.pause()
 
     def browse_vid(self):
         dialog = Dialogo(self, "videos")
@@ -637,14 +595,44 @@ class MainWindow(QMainWindow):
         dialog.exec()
 
     def pause_resume(self):
-        pass
+        if self.paused:
+            self.ui.pause_resume.setText("Pause")
+            self.media_player.play()
+            self.paused = False
+        else:
+            self.ui.pause_resume.setText("Play")
+            self.media_player.pause()
+            self.paused = True
+        
+    def video_status_change(self):
+        if not self.media_player.isPlaying():
+            self.ui.pause_resume.setText("Play")
+            self.media_player.pause()
+            self.paused = True
 
-    def volume_slide(self):
-        pass
+    def volume_slide(self, volume):
+        self.audio_output.setVolume(volume)
 
-    def progress_slide(self):
-        pass
+    def position_changed(self, position):
+        self.ui.vid_slider.setValue(position)
 
+    def duration_changed(self, duration):
+        self.ui.vid_slider.setRange(0, duration)
+
+    def set_position(self, position):
+        self.media_player.setPosition(position)
+    
+    def download_vid(self):
+        if self.video_dir != "":
+            save_name, _ = QFileDialog.getSaveFileName(self, "Save Video", "", filter="Videos (*.mp4 *.avi *.mov)")
+            if save_name:
+                video = requests.get(self.url+f"get-video/{self.video_dir}", stream=True)
+                with open(save_name+".mp4", 'wb') as file:
+                        for chunk in video.iter_content(chunk_size=8192):
+                            file.write(chunk)
+
+    def delete_vid(self):
+        pass
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

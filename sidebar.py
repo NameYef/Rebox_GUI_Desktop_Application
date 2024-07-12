@@ -86,6 +86,11 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addItem(self.verticalSpacer_2)
 
+        self.pushButton_2 = QPushButton(self.icon_name_widget)
+        self.pushButton_2.setObjectName(u"pushButton_2")
+
+        self.verticalLayout.addWidget(self.pushButton_2)
+
         self.exit_2 = QPushButton(self.icon_name_widget)
         self.exit_2.setObjectName(u"exit_2")
         self.exit_2.setCheckable(True)
@@ -234,12 +239,12 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_4.addItem(self.horizontalSpacer_3)
 
-        self.download_image = QPushButton(self.upper_image_page)
-        self.download_image.setObjectName(u"download_image")
-        self.download_image.setMinimumSize(QSize(0, 30))
-        self.download_image.setStyleSheet(u"background-color: rgb(94, 92, 100);")
+        self.download_img = QPushButton(self.upper_image_page)
+        self.download_img.setObjectName(u"download_img")
+        self.download_img.setMinimumSize(QSize(0, 30))
+        self.download_img.setStyleSheet(u"background-color: rgb(94, 92, 100);")
 
-        self.horizontalLayout_4.addWidget(self.download_image)
+        self.horizontalLayout_4.addWidget(self.download_img)
 
         self.delete_img = QPushButton(self.upper_image_page)
         self.delete_img.setObjectName(u"delete_img")
@@ -368,7 +373,11 @@ class Ui_MainWindow(object):
         self.volume_slider.setMaximumSize(QSize(150, 16777215))
         self.volume_slider.setStyleSheet(u"color: rgb(94, 92, 100);\n"
 "")
+        self.volume_slider.setMaximum(100)
+        self.volume_slider.setValue(100)
         self.volume_slider.setOrientation(Qt.Orientation.Horizontal)
+        self.volume_slider.setTickPosition(QSlider.TickPosition.TicksBelow)
+        self.volume_slider.setTickInterval(10)
 
         self.verticalLayout_17.addWidget(self.volume_slider)
 
@@ -881,6 +890,11 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_2.addItem(self.verticalSpacer)
 
+        self.pushButton = QPushButton(self.icon_only_widget)
+        self.pushButton.setObjectName(u"pushButton")
+
+        self.verticalLayout_2.addWidget(self.pushButton)
+
         self.exit_1 = QPushButton(self.icon_only_widget)
         self.exit_1.setObjectName(u"exit_1")
         self.exit_1.setCheckable(True)
@@ -924,6 +938,7 @@ class Ui_MainWindow(object):
         self.config_2.setText(QCoreApplication.translate("MainWindow", u"Configs", None))
         self.images_2.setText(QCoreApplication.translate("MainWindow", u"Images", None))
         self.videos_2.setText(QCoreApplication.translate("MainWindow", u"Videos", None))
+        self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"About", None))
         self.exit_2.setText(QCoreApplication.translate("MainWindow", u"Exit", None))
         self.toggle.setText(QCoreApplication.translate("MainWindow", u"Toggle", None))
         self.refresh_button.setText(QCoreApplication.translate("MainWindow", u"Refresh", None))
@@ -938,44 +953,81 @@ class Ui_MainWindow(object):
 "li.unchecked::marker { content: \"\\2610\"; }\n"
 "li.checked::marker { content: \"\\2612\"; }\n"
 "</style></head><body style=\" font-family:'Ubuntu'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
-"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:26pt;\">WELCOME</span></p>\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:26pt;\"><br /></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">#---------CONFIGURATION---------#<"
-                        "/p>\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:26pt; font-weight:700; color:#000000;\">WELCOME</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:20pt;\">Introduction</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-i"
+                        "ndent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt;\">This is an UI designed for the rebox algorithm (label and bounding box correction). The algorithm generates a new directory of corrected labels, boxes them and generates a video from the boxed images. Check out the change log section to see what has been updated for both the underlying algorithm and the UI</span></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"># how many photos matched from 1 photo</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">no_photo_match</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"># this is for the detection zone in the 2nd image, the 2 values determine how much away from the object is relevant for detection</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">x_offset_for_detection  # ?? unit away from obj top left x</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-inden"
-                        "t:0; text-indent:0px;\">y_offset_for_detection  # ?? unit away from obj top left y</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">width_offset # How wide the detect zone is</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">height_offset # How tall the detect zone is</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:18pt; text-decoration: underline;\">Usage:</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font"
+                        "-size:12pt;\">- Understand each config, (Config explanation is currently in the home page)</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt;\">- Go to the Configs page, fill the configs, choose a project folder, name the generated video </span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt;\">- Go to the Script page, run the script and see real-time console logs of the process</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt;\">- After the script finished running, go to the Images and Videos page to check out the result</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-inden"
+                        "t:0px; font-size:12pt;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:16pt; font-weight:700;\">Documentation of configs:</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:700;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:16pt; text-decoration: underline;\">Resolution section</span></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"># determine how close can boxes of same class be</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">min_x_offset_same_cls # ?? unit away from the closest box of same class</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; ma"
-                        "rgin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">min_y_offset_same_cls # ?? unit away from the closest box of same class</p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt;\">Provide the resolutions of the project images to be processed, a"
+                        "lso the video fps preferred</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-style:italic;\">resolution_x</span><span style=\" font-size:12pt;\">: the width of the images (Default: 1920)</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-style:italic;\">resolution_y</span><span style=\" font-size:12pt;\">: the height of the images (Default: 1080)</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bot"
+                        "tom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-style:italic;\">video_fps</span><span style=\" font-size:12pt;\">: the frames per second for the video (Default: 10)</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:16pt; text-decoration: underline;\">Effectiveness section</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; text-decoration: underline;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bo"
+                        "ttom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt;\">This part controls the effectiveness and also the speed of the algorithm. Typically, the higher the numbers given to these configs, the better the outcomes are, but the speed of the algorithm will also be heavily reduced. Carefully tweak these configs according to your preferences.</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-style:italic;\">no_photo_match</span><span style=\" font-size:12pt;\">: how many images next to the current image will be used to correct labels. The higher this number is, the more consistent the box sizes would be (Cannot guarantee significant improvement, but its still bet"
+                        "ter to have this number higher than 1) (Default: 3)</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-style:italic;\">nfeature_obj</span><span style=\" font-size:12pt;\">: the amount of features extracted from each object labelled in the original labels. Naturally, the higher this number is, the more accurate the matching will be. However, this config along with nfeature_detect_zone are the major bottlenecks of this algorithm. (Don't set either of these 2 value over 300000 or the program will either freeze or crash)</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;\"><br /></p>\n"
+"<p style=\" "
+                        "margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt; font-style:italic;\">nfeature_detect_zone</span><span style=\" font-size:12pt;\">: the amount of features extracted from the detection zone. Instead of comparing an object to the entire image, only a portion of the image is used (configured in the offset section). Similar to nfeature_obj, correction will be more accurate for higher values, but at the risk of program freezing or crashing.</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:16pt; text-decoration: underline;\">Offsets section</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; "
+                        "margin-right:0px; -qt-block-indent:0; text-indent:0px; text-decoration: underline;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt;\">This part determines the detection zone. The x, y offsets determine how many x, y units away from the original object's top left coordinates. The width and height offsets determine how big the detection zone is. This design allows more accurate matchings when the camera is clearly going to a certain direction. As these offset settings allow the user to focus on a zone in a biased way. For example, the x,y offsets are high but the width is small means the left part of the image is more focused on, which is good when the camera travels to the right such that the objects move to the left. Below is an illustration showing how the offsets work</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -q"
+                        "t-block-indent:0; text-indent:0px; font-size:12pt;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt;\">x_offset_for_detection:</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt;\">y_offset_for_detection:</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt;\">width_offset:</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt;\">height_offset:</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt;\">min_x_offset_same_cls:</span></p>\n"
+"<p style=\" "
+                        "margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:12pt;\">min_y_offset_same_cls:</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;\"><br /></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:16pt; text-decoration: underline;\">Confidence section</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;\"><br /></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"># for detection confidence and threshold</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">ratio_threshold # the higher, the more lenient the matching is</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">min_matches # higher values will allow boxes with lower confidence</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">max_size_acceptable # the maximum"
-                        " size that a new box can replace an existing box, i.e. x times larger than original,</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"># set higher if boxes diminish fast or object is sometimes big and sometimes small</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-blo"
+                        "ck-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;\"><br /></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"># for matching computation, may need higher values only for ambiguous objects</p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;\"><br /></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"># THIS PART BOTTLENECKS THE PROGRAM THE MOST, SETTING EITHER VALUE ABO"
-                        "VE 300000 WILL CRASH </p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">nfeature_obj</p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">nfeature_detect_zone</p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">#---------CONFIGURATION---------#</p>\n"
-"<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>", None))
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p"
+                        "x; font-size:12pt;\"><br /></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;\"><br /></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;\"><br /></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:16pt;\"><br /></p></body></html>", None))
         self.browse_img.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
         self.image_view_status.setText(QCoreApplication.translate("MainWindow", u"Choose an image folder", None))
-        self.download_image.setText(QCoreApplication.translate("MainWindow", u"Download", None))
+        self.download_img.setText(QCoreApplication.translate("MainWindow", u"Download", None))
         self.delete_img.setText(QCoreApplication.translate("MainWindow", u"Delete", None))
         self.image_box.setText("")
         self.prev_img.setText(QCoreApplication.translate("MainWindow", u"Previous Image", None))
@@ -1016,6 +1068,7 @@ class Ui_MainWindow(object):
         self.config_1.setText(QCoreApplication.translate("MainWindow", u"C", None))
         self.images_1.setText(QCoreApplication.translate("MainWindow", u"I", None))
         self.videos_1.setText(QCoreApplication.translate("MainWindow", u"V", None))
+        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"A", None))
         self.exit_1.setText(QCoreApplication.translate("MainWindow", u"E", None))
     # retranslateUi
 
