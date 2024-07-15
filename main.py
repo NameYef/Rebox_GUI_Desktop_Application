@@ -119,6 +119,11 @@ class MainWindow(QMainWindow):
 
         self.ui.icon_name_widget.hide()
 
+        self.ui.tabWidget.setTabText(0,"Overview")
+        self.ui.tabWidget.setTabText(1,"Documentation")
+        self.ui.tabWidget.setTabText(2,"Updates")
+        self.ui.tabWidget.setTabText(3,"About")
+
         self.ui.home_1.clicked.connect(self.switch_to_home_page)
         self.ui.home_2.clicked.connect(self.switch_to_home_page)
 
@@ -576,16 +581,17 @@ class MainWindow(QMainWindow):
         pass
 
     def delete_img(self):
+        # not implemented for safety reason
         pass
 
 # For Video Player page
     def load_video(self):
         self.pause = True
         self.ui.pause_resume.setText("Play")
-
+        self.ui.video_view_status.setText(f"Now viewing {self.video_dir.split('/')[-1]}")
         self.media_player.setAudioOutput(self.audio_output)
         self.media_player.setSource(QUrl(self.url+f"get-video/{self.video_dir}"))
-
+        
         self.media_player.play()
         self.media_player.pause()
 
@@ -632,6 +638,7 @@ class MainWindow(QMainWindow):
                             file.write(chunk)
 
     def delete_vid(self):
+        # not implemented for safety reason
         pass
 
 if __name__ == "__main__":
