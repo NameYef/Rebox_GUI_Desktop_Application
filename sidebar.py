@@ -175,7 +175,7 @@ class Ui_MainWindow(object):
         self.run_script = QPushButton(self.script_page)
         self.run_script.setObjectName(u"run_script")
         self.run_script.setStyleSheet(u"background-color: rgb(94, 92, 100);\n"
-"color: rgb(255, 255, 255);")
+"")
         self.run_script.setCheckable(False)
         self.run_script.setAutoExclusive(False)
 
@@ -184,7 +184,7 @@ class Ui_MainWindow(object):
         self.stop_script = QPushButton(self.script_page)
         self.stop_script.setObjectName(u"stop_script")
         self.stop_script.setStyleSheet(u"background-color: rgb(94, 92, 100);\n"
-"color: rgb(255, 255, 255);")
+"")
         self.stop_script.setCheckable(True)
         self.stop_script.setAutoExclusive(True)
 
@@ -1003,6 +1003,14 @@ class Ui_MainWindow(object):
         self.refresh_button.setText(QCoreApplication.translate("MainWindow", u"Refresh", None))
         self.server_status.setText(QCoreApplication.translate("MainWindow", u"Server: Disconnected", None))
         self.elapsed_timer.setText(QCoreApplication.translate("MainWindow", u"Elapsed Time: 00:00:00", None))
+        self.console_log.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"li.unchecked::marker { content: \"\\2610\"; }\n"
+"li.checked::marker { content: \"\\2612\"; }\n"
+"</style></head><body style=\" font-family:'Ubuntu'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">make sure to fill the config first</p></body></html>", None))
         self.run_script.setText(QCoreApplication.translate("MainWindow", u"Run Script", None))
         self.stop_script.setText(QCoreApplication.translate("MainWindow", u"Force Stop", None))
         self.textEdit_2.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"

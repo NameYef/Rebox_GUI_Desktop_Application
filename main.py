@@ -104,7 +104,6 @@ class NameDialogo(Ui_NameDialog,QDialog):
         
         self.close()
         
-
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -142,7 +141,10 @@ class MainWindow(QMainWindow):
         self.ui.refresh_button.clicked.connect(self.refresh)
 
         self.ui.run_script.clicked.connect(self.run_script)
+        self.ui.run_script.setEnabled(False)
+        
         self.ui.stop_script.clicked.connect(self.stop_script)
+        self.ui.stop_script.setEnabled(False)
 
         self.ui.update_profile.clicked.connect(self.update_profile)
         self.ui.save_new_profile.clicked.connect(self.save_profile)
@@ -194,12 +196,18 @@ class MainWindow(QMainWindow):
         self.config_list = [1920,1080,10,3,3000,100000,500,300,800,500,30,25,0.5,15,1.3, "", ""]    # default config list values
         self.config_type = ["int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "float", "float","float","int","float","str","str"]
         
-        self.program_running = False
-        self.second = 0
         self.program_elapsed_timer = QTimer(self)
         self.program_elapsed_timer.setInterval(1000)
         self.program_elapsed_timer.timeout.connect(self.elapsed_time)
-        
+
+        self.program_running = False # redundant variable, change later
+        self.second = 0
+        self.script_running = self.check_script_running()
+        if self.script_running:
+            # self.program_running = True
+            self.second = requests.get(self.url+"get-time").json()
+            self.run_script()
+            
         self.check_server_status()
         self.server_status_timer = QTimer(self)
         self.server_status_timer.setInterval(10000)
@@ -215,7 +223,6 @@ class MainWindow(QMainWindow):
         self.image_list = []
         self.image_index = 0
         self.image = ""
-
 
         self.video_dir = ""
         self.video_list = []
@@ -282,6 +289,9 @@ class MainWindow(QMainWindow):
             self.ui.elapsed_timer.setText(f"Elapsed Time: {hour}:{minute}:{second}")
 
 # For Script page
+    def check_script_running(self):
+        return requests.get(self.url+"check-running").json()
+    
     def run_script(self):
         # self.ui.console_log.clear()
         # self.ui.run_script.setEnabled(False)
@@ -292,9 +302,13 @@ class MainWindow(QMainWindow):
         self.ui.run_script.setEnabled(False)
         self.ui.stop_script.setEnabled(True)
 
-        url = QUrl(self.url+"run-script")
+        if not self.script_running:
+            requests.get(self.url+"start-script")
+            self.script_running = self.check_script_running()
+        url = QUrl(self.url+"get-output")
         request = QNetworkRequest(url)
         
+
         self.program_running = True
         self.program_elapsed_timer.start()
         self.reply = self.manager.get(request)
@@ -309,8 +323,10 @@ class MainWindow(QMainWindow):
      # pass
         if self.reply.isRunning():
             self.reply.abort()
-            self.ui.console_log.append("\nScript forcefully stopped.\n")
+            self.ui.console_log.append("Script forcefully stopped.")
             self.script_finished()
+            requests.get(self.url+"stop-running")
+            self.script_running = self.check_script_running()
             self.program_elapsed_timer.stop()
             self.program_running = False
             self.second = 0
@@ -333,21 +349,12 @@ class MainWindow(QMainWindow):
         self.ui.run_script.setEnabled(True)
         self.ui.stop_script.setEnabled(False)
         self.program_elapsed_timer.stop()
+        # screen supposed to terminate itself
+        self.script_running = self.check_script_running()
         self.program_running = False
         self.second = 0
 
 # For Config page
-    def check_numeric(x):
-        if not isinstance(x, (int, float, complex)):
-            msg_box = QMessageBox()
-            msg_box.setText('Invalid Input: Input numbers only!')
-            msg_box.setWindowTitle('Invalid')
-            
-            # Set stylesheet for message box buttons
-            msg_box.setStyleSheet('QPushButton { color: black; }')
-            # Show the message box
-            msg_box.exec()
-
     def populate_directory_list(self):
         # Clear the list widget
         self.ui.project_listwidget.clear()
@@ -404,6 +411,16 @@ class MainWindow(QMainWindow):
                 self.ui.max_size_lineEdit.setText(data[14])
 
     def save_config(self):
+        if self.script_running:
+            msg_box = QMessageBox()
+            msg_box.setText('Script is running, config cannot be saved.')
+            msg_box.setWindowTitle('Invalid')
+            
+            # Set stylesheet for message box buttons
+            msg_box.setStyleSheet('QPushButton { color: black; }')
+            # Show the message box
+            msg_box.exec()
+            return
         entries = []
         entries.append(self.ui.res_x_lineEdit.text()) 
         entries.append(self.ui.res_y_lineEdit.text())
@@ -486,6 +503,7 @@ class MainWindow(QMainWindow):
         # print(final)
         requests.put(self.url+"store-config", json=final)
         self.enter_cur_config()
+        self.ui.run_script.setEnabled(True)
         msg_box = QMessageBox()
         msg_box.setText('Data has been saved successfully!')
         msg_box.setWindowTitle('Saved')
@@ -578,8 +596,7 @@ class MainWindow(QMainWindow):
             if save_name:
                 with open(save_name+"jpg", "wb") as f:
                     f.write(self.image.content)
-        pass
-
+        
     def delete_img(self):
         # not implemented for safety reason
         pass
