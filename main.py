@@ -141,9 +141,8 @@ class MainWindow(QMainWindow):
         self.ui.refresh_button.clicked.connect(self.refresh)
 
         self.ui.run_script.clicked.connect(self.run_script)
-        self.ui.run_script.setEnabled(False)
-        
         self.ui.stop_script.clicked.connect(self.stop_script)
+        self.ui.run_script.setEnabled(False)
         self.ui.stop_script.setEnabled(False)
 
         self.ui.update_profile.clicked.connect(self.update_profile)
@@ -154,13 +153,16 @@ class MainWindow(QMainWindow):
         self.ui.prev_img.clicked.connect(self.prev_img)
         self.ui.browse_img.clicked.connect(self.browse_img)
         self.ui.download_img.clicked.connect(self.download_img)
-        self.ui.delete_img.clicked.connect(self.delete_img)
 
         self.ui.browse_vid.clicked.connect(self.browse_vid)
         self.ui.pause_resume.clicked.connect(self.pause_resume)
         self.ui.download_vid.clicked.connect(self.download_vid)
-        self.ui.delete_vid.clicked.connect(self.delete_vid)
+        
 
+        self.ui.introduction.setReadOnly(True)
+        self.ui.documentation.setReadOnly(True)
+        self.ui.update_log.setReadOnly(True)
+        self.ui.about.setReadOnly(True)
         self.ui.console_log.setReadOnly(True)
         self.ui.current_config.setReadOnly(True)
         # self.process = QProcess(self)
@@ -200,13 +202,20 @@ class MainWindow(QMainWindow):
         self.program_elapsed_timer.setInterval(1000)
         self.program_elapsed_timer.timeout.connect(self.elapsed_time)
 
+        self.image_preview_timer = QTimer(self)
+        self.image_preview_timer.setInterval(5000)
+        self.image_preview_timer.timeout.connect(self.image_preview)
+
         self.program_running = False # redundant variable, change later
         self.second = 0
-        self.script_running = self.check_script_running()
-        if self.script_running:
-            # self.program_running = True
-            self.second = requests.get(self.url+"get-time").json()
-            self.run_script()
+        try:
+            self.script_running = self.check_script_running()
+            if self.script_running:
+                self.second = requests.get(self.url+"get-time").json()
+                self.run_script()
+                
+        except requests.exceptions.ConnectionError:
+            self.script_running = False
             
         self.check_server_status()
         self.server_status_timer = QTimer(self)
@@ -239,17 +248,14 @@ class MainWindow(QMainWindow):
         self.ui.vid_slider.sliderMoved.connect(self.set_position)
         self.ui.volume_slider.sliderMoved.connect(self.volume_slide)
         
-        try: 
-            requests.put(self.url+"store-config", json=self.config_list)
-        except requests.exceptions.ConnectionError:
-            pass
-            print("OFFLINE MODE")
+        
         with open(os.path.join(self.path, self.selected_config), "w") as f:
             for i in self.config_list:
                 f.write(f"{i}\n")
         
         self.populate_directory_list()
-        self.enter_cur_config()
+        self.get_server_config()
+        
 
 # いつもある設定
     def check_server_status(self):
@@ -264,6 +270,7 @@ class MainWindow(QMainWindow):
     def refresh(self):
         self.check_server_status()
         self.populate_directory_list()
+        self.get_server_config()
 
     def switch_to_home_page(self):
         self.ui.stackedWidget.setCurrentIndex(1)
@@ -292,6 +299,15 @@ class MainWindow(QMainWindow):
     def check_script_running(self):
         return requests.get(self.url+"check-running").json()
     
+    def image_preview(self):
+        self.image = requests.get(self.url+"get-image-preview")
+        print("hi")
+        if self.image is not None:
+            image = QtGui.QPixmap()
+            image.loadFromData(self.image.content)
+
+            self.ui.image_preview.setPixmap(image)
+  
     def run_script(self):
         # self.ui.console_log.clear()
         # self.ui.run_script.setEnabled(False)
@@ -311,6 +327,7 @@ class MainWindow(QMainWindow):
 
         self.program_running = True
         self.program_elapsed_timer.start()
+        self.image_preview_timer.start()
         self.reply = self.manager.get(request)
         self.reply.readyRead.connect(self.read_output)
         self.reply.finished.connect(self.script_finished)
@@ -328,6 +345,7 @@ class MainWindow(QMainWindow):
             requests.get(self.url+"stop-running")
             self.script_running = self.check_script_running()
             self.program_elapsed_timer.stop()
+            self.image_preview_timer.stop()
             self.program_running = False
             self.second = 0
             
@@ -349,7 +367,9 @@ class MainWindow(QMainWindow):
         self.ui.run_script.setEnabled(True)
         self.ui.stop_script.setEnabled(False)
         self.program_elapsed_timer.stop()
+        self.image_preview_timer.stop()
         # screen supposed to terminate itself
+        requests.get(self.url+"stop-running")
         self.script_running = self.check_script_running()
         self.program_running = False
         self.second = 0
@@ -369,6 +389,17 @@ class MainWindow(QMainWindow):
         except requests.exceptions.ConnectionError:
             # print("OFFLINE MODE")
             self.ui.project_listwidget.addItems(["OFFLINE"])
+
+    def get_server_config(self):
+        try:
+            data = requests.get(self.url+"get-config").json()
+            self.ui.current_config.clear()
+            for i in range(len(data)):
+                    self.ui.current_config.moveCursor(QtGui.QTextCursor.End)
+                    self.ui.current_config.insertPlainText(f"{self.config_name[i]}: {data[i]}")
+        except requests.exceptions.ConnectionError:
+            self.ui.current_config.clear()
+            self.ui.current_config.insertPlainText("OFFLINE")
 
     def enter_cur_config(self):
         self.ui.current_config.clear()
@@ -484,7 +515,7 @@ class MainWindow(QMainWindow):
                     if f"{entries[15]}_video{counter}.mp4" in video_dir:
                         counter += 1
                     break
-                entries[16] = f"{entries[15]}_video{counter}"
+                entries[16] = f"{entries[15]}_v{counter}"
             except requests.exceptions.ConnectionError:
                 pass
         
