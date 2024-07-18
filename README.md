@@ -12,10 +12,10 @@ This is an UI designed for the rebox algorithm (label and bounding box correctio
 
 
 **Usage:**
-- Understand each config, (Config explanation is currently in the home page)
-- Go to the Configs page, fill the configs, choose a project folder, name the generated video
+- Understand each config, (Go to the documentation tab)
+- Go to the Configs page, fill the configs, choose a project folder, name the generated video (ok to leave the video name empty, now generates default names)
 - Go to the Script page, run the script and see real-time console logs of the process
-- After the script finished running, go to the Images and Videos page to check out the result
+- After the script finished running, go to the Images and Videos page to view the results
 
 
 ### Requirements
