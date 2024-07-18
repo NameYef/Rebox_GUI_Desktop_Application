@@ -178,12 +178,12 @@ class MainWindow(QMainWindow):
         self.ui.no_photo_match_lineEdit.setPlaceholderText("default: 3")
         self.ui.nfeature_obj_lineEdit.setPlaceholderText("default 3000")
         self.ui.nfeature_det_lineEdit.setPlaceholderText("default: 100000")
-        self.ui.x_off_lineEdit.setPlaceholderText("default: 500")
-        self.ui.y_off_lineEdit.setPlaceholderText("default: 300")
-        self.ui.width_off_lineEdit.setPlaceholderText("default: 800")
-        self.ui.height_off_lineEdit.setPlaceholderText("default: 500")
+        self.ui.x_off_lineEdit.setPlaceholderText("default: 200")
+        self.ui.y_off_lineEdit.setPlaceholderText("default: 200")
+        self.ui.width_off_lineEdit.setPlaceholderText("default: 200")
+        self.ui.height_off_lineEdit.setPlaceholderText("default: 200")
         self.ui.min_x_lineEdit.setPlaceholderText("default: 30")
-        self.ui.min_y_lineEdit.setPlaceholderText("default: 25")
+        self.ui.min_y_lineEdit.setPlaceholderText("default: 30")
         self.ui.ratio_lineEdit.setPlaceholderText("default: 0.5")
         self.ui.min_match_lineEdit.setPlaceholderText("default: 15")
         self.ui.max_size_lineEdit.setPlaceholderText("default: 1.3")
@@ -195,7 +195,7 @@ class MainWindow(QMainWindow):
         self.projects_directory = "./projects"
         self.config_name = ["resolution_x","resolution_y","video_fps","no_photo_match","nfeature_obj","nfeature_detect_zone","x_offset_for_detection","y_offset_for_detection"
                             ,"width_offset","height_offset","min_x_offset_same_cls","min_y_offset_same_cls","ratio_threshold","min_matches","max_size_acceptable","project_folder","video_name"]
-        self.config_list = [1920,1080,10,3,3000,100000,500,300,800,500,30,25,0.5,15,1.3, "", ""]    # default config list values
+        self.config_list = [1920,1080,10,3,3000,100000,200,200,200,200,30,30,0.5,15,1.3, "", ""]    # default config list values
         self.config_type = ["int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "float", "float","float","int","float","str","str"]
         
         self.program_elapsed_timer = QTimer(self)
@@ -203,7 +203,7 @@ class MainWindow(QMainWindow):
         self.program_elapsed_timer.timeout.connect(self.elapsed_time)
 
         self.image_preview_timer = QTimer(self)
-        self.image_preview_timer.setInterval(5000)
+        self.image_preview_timer.setInterval(500)
         self.image_preview_timer.timeout.connect(self.image_preview)
 
         self.program_running = False # redundant variable, change later
@@ -301,7 +301,6 @@ class MainWindow(QMainWindow):
     
     def image_preview(self):
         self.image = requests.get(self.url+"get-image-preview")
-        print("hi")
         if self.image is not None:
             image = QtGui.QPixmap()
             image.loadFromData(self.image.content)
