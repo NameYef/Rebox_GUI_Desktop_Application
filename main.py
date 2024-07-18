@@ -176,8 +176,8 @@ class MainWindow(QMainWindow):
         self.ui.res_y_lineEdit.setPlaceholderText("default: 1080")
         self.ui.video_fps_lineEdit.setPlaceholderText("default: 10")
         self.ui.no_photo_match_lineEdit.setPlaceholderText("default: 3")
-        self.ui.nfeature_obj_lineEdit.setPlaceholderText("default 3000")
-        self.ui.nfeature_det_lineEdit.setPlaceholderText("default: 100000")
+        self.ui.nfeature_obj_lineEdit.setPlaceholderText("default 20000")
+        self.ui.nfeature_det_lineEdit.setPlaceholderText("default: 20000")
         self.ui.x_off_lineEdit.setPlaceholderText("default: 200")
         self.ui.y_off_lineEdit.setPlaceholderText("default: 200")
         self.ui.width_off_lineEdit.setPlaceholderText("default: 200")
@@ -195,7 +195,7 @@ class MainWindow(QMainWindow):
         self.projects_directory = "./projects"
         self.config_name = ["resolution_x","resolution_y","video_fps","no_photo_match","nfeature_obj","nfeature_detect_zone","x_offset_for_detection","y_offset_for_detection"
                             ,"width_offset","height_offset","min_x_offset_same_cls","min_y_offset_same_cls","ratio_threshold","min_matches","max_size_acceptable","project_folder","video_name"]
-        self.config_list = [1920,1080,10,3,3000,100000,200,200,200,200,30,30,0.5,15,1.3, "", ""]    # default config list values
+        self.config_list = [1920,1080,10,3,20000,20000,200,200,200,200,30,30,0.5,15,1.3, "", ""]    # default config list values
         self.config_type = ["int", "int", "int", "int", "int", "int", "int", "int", "int", "int", "float", "float","float","int","float","str","str"]
         
         self.program_elapsed_timer = QTimer(self)
