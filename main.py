@@ -214,7 +214,7 @@ class MainWindow(QMainWindow):
                 self.second = requests.get(self.url+"get-time").json()
                 self.run_script()
                 
-        except requests.exceptions.ConnectionError:
+        except (requests.exceptions.ConnectionError,requests.exceptions.MissingSchema):
             self.script_running = False
             
         self.check_server_status()
@@ -263,7 +263,7 @@ class MainWindow(QMainWindow):
             requests.get(self.url + "/check")
             self.ui.server_status.setStyleSheet(u"color: rgb(0, 204, 0);")
             self.ui.server_status.setText("Server: Connected")
-        except requests.exceptions.ConnectionError:
+        except (requests.exceptions.ConnectionError,requests.exceptions.MissingSchema):
             self.ui.server_status.setStyleSheet(u"color: rgb(204, 0, 0);")
             self.ui.server_status.setText("Server: Disconnected")
 
@@ -385,7 +385,7 @@ class MainWindow(QMainWindow):
 
             # Add directories to the list widget
             self.ui.project_listwidget.addItems(directories)
-        except requests.exceptions.ConnectionError:
+        except (requests.exceptions.ConnectionError,requests.exceptions.MissingSchema):
             # print("OFFLINE MODE")
             self.ui.project_listwidget.addItems(["OFFLINE"])
 
@@ -396,7 +396,7 @@ class MainWindow(QMainWindow):
             for i in range(len(data)):
                     self.ui.current_config.moveCursor(QtGui.QTextCursor.End)
                     self.ui.current_config.insertPlainText(f"{self.config_name[i]}: {data[i]}")
-        except requests.exceptions.ConnectionError:
+        except (requests.exceptions.ConnectionError,requests.exceptions.MissingSchema):
             self.ui.current_config.clear()
             self.ui.current_config.insertPlainText("OFFLINE")
 
