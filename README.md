@@ -2,6 +2,8 @@
 
 This is an UI designed for the rebox algorithm (label and bounding box correction). The algorithm generates a new directory of corrected labels, boxes them and generates a video from the boxed images. Go to the Documentation tab to see how the configs work. Check out the Updates tab to see what has been updated for both the underlying algorithm and the UI. See the more detailed explanation of the algorithm in the About tab.
 
+(App for internal use, enter the correct url in main.py to use the app)
+
 
 ### NOTE:
 - Project folder must consist of both images and labels subfolder (Must be called images and labels)
