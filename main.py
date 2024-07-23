@@ -108,7 +108,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
 
-        self.url = "http://dev.alphaaitech.com:40030/"
+        self.url = ""
 
         self.ui = Ui_MainWindow()
         self.dialog_ui = Ui_Dialog()
